@@ -1,4 +1,5 @@
 // main.js - Cat lingo emoji - AMB LECTURA I TIPS INTEGRATS
+
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
@@ -86,12 +87,12 @@ const NIVELL_MINIJOC = {minEmojis: 2, maxEmojis: 5, nivelActual: parseInt(localS
 
 function vibrar() { if (navigator.vibrate) navigator.vibrate(20); }
 function quitarSkinTone(emoji) { return emoji.replace(/[\u{1F3FB}-\u{1F3FF}]/u, ''); }
-function mostrarModal(text) { 
-  document.getElementById('modalText').textContent = text; 
-  document.getElementById('modal').classList.add('active'); 
+function mostrarModal(text) {
+  document.getElementById('modalText').textContent = text;
+  document.getElementById('modal').classList.add('active');
 }
-function tancarModal() { 
-  document.getElementById('modal').classList.remove('active'); 
+function tancarModal() {
+  document.getElementById('modal').classList.remove('active');
 }
 
 async function carregarDades() {
@@ -319,8 +320,8 @@ function novaFraseMinijoc() {
 function generarEmojisParaFraseCorta(frase) {
   const emojisJugador = EMOJIS_JUGABLES.map(e => e.emoji);
   const emojisFalsos = emojisJugador
-   .filter(e =>!frase.solucio.some(eSol => quitarSkinTone(e) === quitarSkinTone(eSol)))
-   .sort(() => 0.5 - Math.random()).slice(0, 10 - frase.solucio.length);
+  .filter(e =>!frase.solucio.some(eSol => quitarSkinTone(e) === quitarSkinTone(eSol)))
+  .sort(() => 0.5 - Math.random()).slice(0, 10 - frase.solucio.length);
   const emojisAMostrar = [...frase.solucio,...emojisFalsos].sort(() => 0.5 - Math.random());
   estat.minijoc.emojisDisponibles = emojisAMostrar;
   let html = '';
@@ -560,3 +561,11 @@ function generarTipGramatica(lang) {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
 }
+
+// INICIALITZACIÓ
+document.addEventListener('DOMContentLoaded', async () => {
+  aplicarIdioma();
+  await carregarDades();
+  actualitzarUI();
+  canviarTab('missio', null);
+});
