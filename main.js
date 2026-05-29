@@ -322,7 +322,7 @@ function generarTextLectura(nivell, lang) {
   let parts = [];
   parts.push(rand(D.intros));
   for(let i=0; i<3; i++) {
-    let frase = rand(D.subjectes) + " + rand(D.accions) + " + rand(D.objectes) + " + rand(D.llocs) + ".";
+    let frase = rand(D.subjectes) " " rand(D.accions) " " rand(D.objectes) " " rand(D.llocs) + ".";
     parts.push(frase);
   }
   parts.push(rand(D.connectors) + ", " + rand(D.subjectes).toLowerCase() + " + rand(D.estats) + ".");
