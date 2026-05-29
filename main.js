@@ -1,4 +1,4 @@
-// main.js - Cat lingo emoji - Lògica del minijoc només a Gremi > Biblioteca > Minijocs
+// main.js - Cat lingo emoji - Mapa 100 nivells + Progrés 25 frases per desbloquejar
 
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -43,6 +43,7 @@ let estat = {
   emojisDesbloquejats: JSON.parse(localStorage.getItem('cat_emojis')) || ['😀','😊','😂','👨','👩','🐶','🏠','🍎','🚗','⚽'],
   personatge: JSON.parse(localStorage.getItem('cat_personatge')) || null,
   minijoc: {fraseObjectiu: null, emojisTriats: [], emojisDisponibles: [], modo: 'corta'},
+  progres: JSON.parse(localStorage.getItem('cat_progres')) || {respostesCorrectes: 0, nivellActualMapa: 1},
   packs_botiga: []
 };
 
@@ -56,7 +57,8 @@ const LANGS = {
     comprovar: "Comprovar", correcte: "Correcte!", incorrecte: "No és així. Era:",
     no_prou_monedes: "No tens prou monedes!", comprat: "Comprat", tria_personatge: "Tria el teu personatge",
     nom_personatge: "Com et dius?", canviar_personatge: "Canviar Personatge", lectura_titol: "Lectura",
-    lectura_btn: "Generar Lectura", tips_titol: "Tips", tips_btn: "Nou Tip"
+    lectura_btn: "Generar Lectura", tips_titol: "Tips", tips_btn: "Nou Tip",
+    nivell: "Nivell", desbloquejat: "Desbloquejat!", et_falten: "Et falten", frases: "frases"
   },
   ca: {
     app_titol: "Cat lingo emoji", monedes: "Monedes", tab_mapa: "Món", tab_missio: "Missió",
@@ -67,7 +69,8 @@ const LANGS = {
     comprovar: "Comprovar", correcte: "Correcte!", incorrecte: "No és així. Era:",
     no_prou_monedes: "No tens prou monedes!", comprat: "Comprat", tria_personatge: "Tria el teu personatge",
     nom_personatge: "Com et dius?", canviar_personatge: "Canviar Personatge", lectura_titol: "Lectura",
-    lectura_btn: "Generar Lectura", tips_titol: "Tips", tips_btn: "Nou Tip"
+    lectura_btn: "Generar Lectura", tips_titol: "Tips", tips_btn: "Nou Tip",
+    nivell: "Nivell", desbloquejat: "Desbloquejat!", et_falten: "Et falten", frases: "frases"
   }
 };
 
@@ -83,7 +86,7 @@ const PERSONATGES_JUGADOR = [
   {id: 'dona', emoji: '👩', nom: 'Dona'}
 ];
 
-const NIVELL_MINIJOC = {minEmojis: 2, maxEmojis: 5, nivelActual: parseInt(localStorage.getItem('cat_nivell_minijoc')) || 1};
+const NIVELL_MINIJOC = {minEmojis: 2, maxEmojis: 5};
 
 function vibrar() { if (navigator.vibrate) navigator.vibrate(20); }
 function quitarSkinTone(emoji) { return emoji.replace(/[\u{1F3FB}-\u{1F3FF}]/u, ''); }
@@ -165,23 +168,60 @@ function canviarTab(tab, e) {
   if(tab === 'botiga') carregarBotiga();
 }
 
-// PESTANYA MAPA - buida per programar després
+// MAPA - 100 nivells desbloquejables amb 25 frases per nivell
 function carregarMapa() {
   const mapaDiv = document.getElementById('mapa');
   if (!mapaDiv) return;
-  mapaDiv.innerHTML = `<div style="text-align:center; padding:40px; color:#888;">
-    <h3>🗺️ Mapa</h3><p>Aquí sortiran els 100 nivells desbloquejables.</p>
-  </div>`;
+
+  let html = `<h3 style="text-align:center; margin-bottom:15px;">🗺️ ${LANG.nivell} ${estat.progres.nivellActualMapa}</h3>`;
+  html += `<p style="text-align:center; color:#888; margin-bottom:20px;">${estat.progres.respostesCorrectes}/25 ${LANG.frases} per pujar</p>`;
+  html += `<div class="capitol-grid">`;
+
+  for(let i = 1; i <= 100; i++) {
+    const desbloquejat = i <= estat.progres.nivellActualMapa;
+    const actual = i === estat.progres.nivellActualMapa;
+    html += `<div class="capitol-card ${!desbloquejat? 'locked' : ''}" onclick="${desbloquejat? `jugarNivellMapa(${i})` : ''}">
+      <div class="capitol-icona">${desbloquejat? '✅' : '🔒'}</div>
+      <h3>${LANG.nivell} ${i}</h3>
+      <p>${desbloquejat? (actual? 'Jugar' : 'Completat') : `${LANG.et_falten} ${25 - (estat.progres.respostesCorrectes % 25)} ${LANG.frases}`}</p>
+    </div>`;
+  }
+  html += `</div>`;
+  mapaDiv.innerHTML = html;
 }
 
-// PESTANYA MISSIÓ - buida per programar després
+function jugarNivellMapa(nivell) {
+  if(nivell!== estat.progres.nivellActualMapa) {
+    mostrarModal(`Juga al ${LANG.nivell} ${estat.progres.nivellActualMapa} primer`);
+    return;
+  }
+  mostrarModal(`Entra al minijoc i completa 25 frases per desbloquejar el ${LANG.nivell} ${nivell + 1}`);
+  canviarTab('gremi', null);
+  setTimeout(() => mostrarGremi('biblioteca', null), 100);
+  setTimeout(() => mostrarBibliotecaTab('minijocs', null), 200);
+}
+
+// MISSIO - mostra què falta per desbloquejar el següent nivell
 function carregarMissioTab() {
   const cont = document.getElementById('missio-contenidor');
   if(!cont) return;
-  cont.innerHTML = `<div style="text-align:center; padding:40px; color:#888;">
-    <h3>📝 Missió</h3>
-    <p>Aquí hi aniran les rutes secretes i nivells més endavant.</p>
-  </div>`;
+
+  const frasesPerNivell = 25;
+  const respostesActuals = estat.progres.respostesCorrectes % frasesPerNivell;
+  const falten = frasesPerNivell - respostesActuals;
+  const percentatge = (respostesActuals / frasesPerNivell) * 100;
+
+  cont.innerHTML = `
+    <div class="gremi-item" style="text-align:center;">
+      <h3>🎯 ${LANG.nivell} ${estat.progres.nivellActualMapa}</h3>
+      <p style="color:#888; margin:15px 0;">${LANG.et_falten} ${falten} ${LANG.frases} per desbloquejar el ${LANG.nivell} ${estat.progres.nivellActualMapa + 1}</p>
+      <div style="background:#222; border-radius:10px; height:20px; overflow:hidden; margin:20px 0;">
+        <div style="background:linear-gradient(90deg, var(--accent), var(--accent2)); height:100%; width:${percentatge}%; transition:width 0.3s;"></div>
+      </div>
+      <p style="font-size:14px; color:#aaa;">Progrés: ${respostesActuals}/25</p>
+      <button class="btn" onclick="canviarTab('gremi', null); setTimeout(()=>mostrarGremi('biblioteca', null), 50); setTimeout(()=>mostrarBibliotecaTab('minijocs', null), 100);" style="margin-top:15px;">Anar a Minijoc</button>
+    </div>
+  `;
 }
 
 function guardarEstat() {
@@ -189,7 +229,7 @@ function guardarEstat() {
   localStorage.setItem('cat_compres', JSON.stringify(estat.compres));
   localStorage.setItem('cat_emojis', JSON.stringify(estat.emojisDesbloquejats));
   localStorage.setItem('cat_personatge', JSON.stringify(estat.personatge));
-  localStorage.setItem('cat_nivell_minijoc', NIVELL_MINIJOC.nivelActual);
+  localStorage.setItem('cat_progres', JSON.stringify(estat.progres));
 }
 
 function actualitzarUI() {
@@ -227,7 +267,6 @@ function mostrarGremi(tab, e) {
   }
 
   if(tab === 'biblioteca') {
-    // Pinta els sub-tabs DINS de biblioteca
     cont.innerHTML = `
       <div class="sub-tabs" style="margin-bottom:20px;">
         <button class="sub-tab-btn active" onclick="mostrarBibliotecaTab('diccionari', event)">Diccionari</button>
@@ -278,7 +317,7 @@ function mostrarBibliotecaTab(tab, e) {
   if(tab === 'minijocs') {
     cont.innerHTML = `
       <h3 style="text-align:center;">${LANG.minijoc_titol}</h3>
-      <p id="minijoc-nivell" style="color:#4CAF50; font-weight:bold; margin:8px 0; text-align:center;">Nivell ${NIVELL_MINIJOC.nivelActual}</p>
+      <p id="minijoc-nivell" style="color:#4CAF50; font-weight:bold; margin:8px 0; text-align:center;">${LANG.nivell} ${estat.progres.nivellActualMapa}</p>
       <p style="color:#888; margin:12px 0; text-align:center;">${LANG.minijoc_desc}</p>
       <div id="minijoc-frase" style="background:#222; padding:15px; border-radius:12px; min-height:50px; margin-bottom:15px; text-align:center; font-size:18px;">Prem "Nova frase" per començar</div>
       <button class="btn btn-sec" onclick="novaFraseMinijoc()" style="margin-bottom:15px; width:100%;">Nova frase</button>
@@ -291,12 +330,12 @@ function mostrarBibliotecaTab(tab, e) {
   }
 }
 
-// PESTANYA LECTURA
+// LECTURA - dificultat segons nivell del mapa
 function mostrarLecturaTab() {
   const cont = document.getElementById('lectura-contenidor');
   if(!cont) return;
   cont.innerHTML = `
-    <h3 style="text-align:center; margin-bottom:15px;">${LANG.lectura_titol}</h3>
+    <h3 style="text-align:center; margin-bottom:15px;">${LANG.lectura_titol} - ${LANG.nivell} ${estat.progres.nivellActualMapa}</h3>
     <div id="lectura-content" style="background:#1a1a1a; padding:20px; border-radius:12px; min-height:150px; font-size:16px; line-height:1.6; margin-bottom:15px;">
       Prem "${LANG.lectura_btn}" per generar una lectura nova
     </div>
@@ -305,7 +344,8 @@ function mostrarLecturaTab() {
 }
 
 function generarTextLectura(nivell, lang) {
-  const D = LECTURA_CONTENT[nivell];
+  const nivellClau = Math.min(Math.ceil(nivell / 33) + 1, 3); // Niv 1-33 = 1, 34-66 = 2, 67-100 = 3
+  const D = LECTURA_CONTENT[nivellClau];
   let parts = [];
   parts.push(rand(D.intros));
   for(let i=0; i<3; i++) {
@@ -318,17 +358,16 @@ function generarTextLectura(nivell, lang) {
 }
 
 function generarLectura() {
-  const nivell = Math.min(NIVELL_MINIJOC.nivelActual, 3);
-  const text = generarTextLectura(nivell, idioma);
+  const text = generarTextLectura(estat.progres.nivellActualMapa, idioma);
   document.getElementById('lectura-content').textContent = text;
 }
 
-// PESTANYA TIPS
+// TIPS - dificultat segons nivell del mapa
 function mostrarTipsTab() {
   const cont = document.getElementById('tips-contenidor');
   if(!cont) return;
   cont.innerHTML = `
-    <h3 style="text-align:center; margin-bottom:15px;">${LANG.tips_titol}</h3>
+    <h3 style="text-align:center; margin-bottom:15px;">${LANG.tips_titol} - ${LANG.nivell} ${estat.progres.nivellActualMapa}</h3>
     <div id="tips-content" style="background:#1a1a1a; padding:20px; border-radius:12px; min-height:100px; font-size:16px; line-height:1.6; margin-bottom:15px;">
       Prem "${LANG.tips_btn}" per un tip nou
     </div>
@@ -341,7 +380,7 @@ function generarTip() {
   document.getElementById('tips-content').textContent = tip;
 }
 
-// MINIJOC - només a Gremi > Biblioteca > Minijocs
+// MINIJOC - suma progrés i desbloqueja nivell cada 25 correctes
 function novaFraseMinijoc() {
   if (!FRASES_MINIJOC || FRASES_MINIJOC.length === 0) return;
   const emojisDisponibles = EMOJIS_JUGABLES;
@@ -358,7 +397,7 @@ function novaFraseMinijoc() {
   esperarElemento('minijoc-frase', el => el.textContent = text);
   esperarElemento('minijoc-triats', el => el.textContent = '');
   esperarElemento('minijoc-feedback', el => el.innerHTML = '');
-  esperarElemento('minijoc-nivell', el => el.textContent = `Nivell ${NIVELL_MINIJOC.nivelActual}`);
+  esperarElemento('minijoc-nivell', el => el.textContent = `${LANG.nivell} ${estat.progres.nivellActualMapa}`);
 
   generarEmojisParaFraseCorta({solucio});
 }
@@ -428,9 +467,18 @@ function comprovarMinijoc() {
   const triatsCorrecte = estat.minijoc.emojisTriats.map(quitarSkinTone).join('');
   const esCorrecte = solucioCorrecta === triatsCorrecte;
   const feedback = document.getElementById('minijoc-feedback');
+
   if (esCorrecte) {
     feedback.innerHTML = `<p style="color:#4CAF50; font-weight:bold;">${LANG.correcte}</p>`;
     estat.monedes += 5;
+    estat.progres.respostesCorrectes += 1;
+
+    // Desbloquejar següent nivell cada 25 frases
+    if(estat.progres.respostesCorrectes % 25 === 0 && estat.progres.nivellActualMapa < 100) {
+      estat.progres.nivellActualMapa += 1;
+      mostrarModal(`${LANG.desbloquejat} ${LANG.nivell} ${estat.progres.nivellActualMapa}!`);
+    }
+
     actualitzarUI();
     guardarEstat();
   } else {
@@ -503,7 +551,6 @@ async function comprarPack(id, preu, event) {
     });
     await carregarDades();
   }
-  NIVELL_MINIJOC.nivelActual = Math.min(NIVELL_MINIJOC.nivelActual + 1, NIVELL_MINIJOC.maxEmojis);
   guardarEstat();
   actualitzarUI();
   renderitzarBotiga();
@@ -512,7 +559,7 @@ async function comprarPack(id, preu, event) {
 
 // GENERADORS
 const LECTURA_CONTENT = {
- 1: {
+  1: {
     subjectes: ["El gat", "La noia", "El nen", "La casa", "El gos", "La mare", "El pare", "La nena", "El llibre", "La taula"],
     accions: ["menja", "llegeix", "corre", "dorm", "juga", "veu", "canta", "camina", "salta", "riu"],
     objectes: ["una poma", "un llibre", "una cançó", "una història", "a casa", "al parc", "amb alegria", "tranquil·lament", "bé", "ràpid"],
@@ -549,7 +596,7 @@ function rand(arr) {
 }
 
 const TIPS_CONTENT = {
-    ca: [
+  ca: [
     "En català, l'article definit 'el' es contrau amb 'a' i forma 'al'. Ex: Vaig al parc.",
     "El passat perifràstic s'usa molt: 'vaig menjar' en comptes de 'menjí'.",
     "Els pronoms febles van davant del verb: 'me'l dono'.",
