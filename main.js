@@ -639,6 +639,10 @@ function renderitzarBotiga() {
   });
 }
 
+function actualitzarUI() {
+  document.getElementById('monedes').innerHTML = `🪙 ${estat.monedes} <span id="text-monedes">${LANG.monedes}</span>`;
+}
+
 async function comprarPack(id, preu, event) {
   if (event) event.stopPropagation();
   if (estat.monedes < preu) { mostrarModal(LANG.no_prou_monedes); return; }
