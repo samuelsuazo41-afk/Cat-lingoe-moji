@@ -504,6 +504,32 @@ const BANCO_VOCAB = {
     }
   }
 };
+
+function cargarLectura() {
+  let num = estat.progres.nivellActualMapa;
+  let nivell = mapaNivellALletra(num);
+  let contextos = BANCO_VOCAB[nivell];
+
+  if (!contextos) {
+    document.getElementById('lectura-content').innerHTML =
+      "Encara no hi ha lectures d’aquest nivell. Puja de nivell per desbloquejar-les!";
+    return;
+  }
+
+  // Missatge inicial
+  document.getElementById('lectura-content').innerHTML = `
+    <div style="text-align:center; padding:20px; opacity:0.8;">
+      <div style="font-size:48px; margin-bottom:10px;">📖</div>
+      <div style="font-size:16px; margin-bottom:15px;">
+        Nivell ${nivell.toUpperCase()} - ${Object.keys(contextos).length} temes disponibles
+      </div>
+      <div style="font-size:14px; opacity:0.7;">
+        Prem "Generar Lectura" per començar una història nova
+      </div>
+    </div>
+  `;
+}
+
 function generarLectura() {
   let num = estat.progres.nivellActualMapa;
   let nivell = mapaNivellALletra(num);
