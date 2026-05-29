@@ -157,7 +157,7 @@ body {
 <div class="container">
   <div class="header">
     <h1 id="app-titol">Cat lingo emoji</h1>
-    <div class="monedes"><span id="text-monedes">Monedes</span>: <span id="coins">0</span></div>
+    <div class="monedes"><span id="text-monedes">Monedes</span>: <span id="monedes">0</span></div>
   </div>
 
   <div id="tab-mapa" class="tab-content">
@@ -167,7 +167,13 @@ body {
   </div>
 
   <div id="tab-missio" class="tab-content active">
-    <div id="missio-contenidor"></div>
+    <p id="minijoc-nivell" style="color:#4CAF50; font-weight:bold; margin:8px 0;"></p>
+    <div id="minijoc-frase" style="background:#222; padding:15px; border-radius:12px; min-height:50px; margin-bottom:15px; text-align:center; font-size:18px;"></div>
+    <button class="btn btn-sec" onclick="novaFraseMinijoc()" style="margin-bottom:15px;">Nova frase</button>
+    <div id="minijoc-emojis" class="emoji-grid"></div>
+    <div id="minijoc-triats" style="background:#222; padding:15px; border-radius:12px; min-height:50px; margin:15px 0; text-align:center; font-size:24px;"></div>
+    <button class="btn" onclick="comprovarMinijoc()">Comprovar</button>
+    <div id="minijoc-feedback" style="margin-top:15px;"></div>
   </div>
 
   <div id="tab-gremi" class="tab-content">
