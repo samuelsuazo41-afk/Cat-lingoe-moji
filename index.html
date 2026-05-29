@@ -1,1 +1,134 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RPG Cròniques de Catalunya</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#FF3B30">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<header>
+  <h1 id="app-titol">RPG Cròniques de Catalunya</h1>
+  <div id="totem-display" style="font-size: 12px; margin-top: 4px;"></div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <span id="coins">🪙 0</span>
+    <span id="text-monedes">Monedes</span>
+  </div>
+  <div class="stat-item" id="stats">
+    Seny: 0 | Rauxa: 0 | Arrel: 0 | Obert: 0
+  </div>
+</div>
+
+<div class="container">
+
+  <div id="tab-mapa" class="tab-content active">
+    <h2 id="text-mon" style="margin-bottom: 20px;">🗺️ Mapa de Catalunya</h2>
+    <div id="mapa"></div>
+  </div>
+
+  <div id="tab-missio" class="tab-content">
+    <div id="missio-card">
+      <h3 id="missio-titol">Selecciona una missió al mapa</h3>
+      <div id="missio-escenari"></div>
+      <div id="missio-opcions"></div>
+      <div id="missio-feedback"></div>
+    </div>
+  </div>
+
+  <div id="tab-gremi" class="tab-content">
+    <div class="sub-tabs">
+      <button class="sub-tab-btn active" onclick="mostrarGremi('biblioteca', event)">📚 Biblioteca</button>
+      <button class="sub-tab-btn" onclick="mostrarGremi('minijocs', event)">🎮 Mini-jocs</button>
+      <button class="sub-tab-btn" onclick="mostrarGremi('personatges', event)">Personatges</button>
+    </div>
+    <div id="gremi-contenidor"></div>
+  </div>
+
+  <div id="tab-lectura" class="tab-content">
+    <div id="lectura-contenidor"></div>
+  </div>
+
+  <div id="tab-tips" class="tab-content">
+    <div id="tips-contenidor"></div>
+  </div>
+
+  <div id="tab-botiga" class="tab-content">
+    <h2 id="text-botiga" style="margin-bottom: 20px;">🛒 Botiga</h2>
+    <div id="botiga-contenidor"></div>
+  </div>
+
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item active" onclick="canviarTab('mapa', event)">
+    <span class="nav-icon">🗺️</span>
+    <span id="tab-mapa-txt">Món</span>
+  </div>
+  <div class="nav-item" onclick="canviarTab('missio', event)">
+    <span class="nav-icon">📖</span>
+    <span id="tab-missio-txt">Missió</span>
+  </div>
+  <div class="nav-item" onclick="canviarTab('gremi', event)">
+    <span class="nav-icon">🏛️</span>
+    <span id="tab-gremi-txt">Gremi</span>
+  </div>
+  <div class="nav-item" onclick="canviarTab('lectura', event)">
+    <span class="nav-icon">📖</span>
+    <span id="tab-lectura-txt">Lectura</span>
+  </div>
+  <div class="nav-item" onclick="canviarTab('tips', event)">
+    <span class="nav-icon">💡</span>
+    <span id="tab-tips-txt">Tips</span>
+  </div>
+  <div class="nav-item" onclick="canviarTab('botiga', event)">
+    <span class="nav-icon">🛒</span>
+    <span id="tab-botiga-txt">Botiga</span>
+  </div>
+</nav>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-content">
+    <p id="modalText"></p>
+    <div class="modal-botons">
+      <button onclick="tancarModal()">Cancel·lar</button>
+      <button onclick="confirmarAccio()">Acceptar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts de dades -->
+<script src="./data/lectura-content.js"></script>
+<script src="./data/lectura-generator.js"></script>
+<script src="./data/tips-content.js"></script>
+<script src="./data/tips-generator.js"></script>
+<script src="./main.js"></script>
+
+<script>
+function vibrar() {
+  if (navigator.vibrate) navigator.vibrate(20);
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+  .then(reg => console.log('SW registrat:', reg.scope))
+  .catch(err => console.log('SW error:', err));
+  });
+}
+</script>
+
+</body>
+</html>
