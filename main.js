@@ -1,4 +1,4 @@
-// main.js - RPG Cròniques de Catalunya - AMB LECTURA I TIPS INTEGRATS
+// main.js - Cat lingo emoji - AMB LECTURA I TIPS INTEGRATS
 
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
