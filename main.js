@@ -387,9 +387,34 @@ function carregarTips() {
   `;
 }
 
+// Variables globals per controlar el nivell actual
+let nivellActual = 'a1'; // pots canviar a 'a2' o 'b1' quan pugi de nivell
+let tipsUsats = {a1: [], a2: [], b1: []}; // per no repetir fins que s'acabin
+
 function generarTip() {
-  const tips = ["En català, l'article 'el' + 'a' = 'al'. Ex: Vaig al parc.", "El passat perifràstic: vaig menjar, vas córrer.", "Els pronoms febles van davant: me'l dono."];
-  document.getElementById('tips-content').textContent = tips[Math.floor(Math.random()*tips.length)];
+  let dadesNivell = dadesTips[nivellActual];
+
+  // Si ja hem usat tots els tips d'aquest nivell, reiniciem
+  if (tipsUsats[nivellActual].length >= dadesNivell.length) {
+    tipsUsats[nivellActual] = [];
+  }
+
+  // Agafem un tip que no s'hagi usat encara
+  let indexDisponibles = dadesNivell
+   .map((_, i) => i)
+   .filter(i =>!tipsUsats[nivellActual].includes(i));
+
+  let indexAleatori = indexDisponibles[Math.floor(Math.random()*indexDisponibles.length)];
+  tipsUsats[nivellActual].push(indexAleatori);
+
+  let d = dadesNivell[indexAleatori];
+  let tipFormatejat = `💡 Truc: "${d.truc}".\nExemple: ${d.exemple}`;
+  document.getElementById('tips-content').innerHTML = tipFormatejat;
+}
+
+// Funció per canviar de nivell quan l'usuari pugi
+function canviarNivell(nouNivell) {
+  nivellActual = nouNivell; // 'a1', 'a2' o 'b1'
 }
 
 // ===== BOTIGA =====
