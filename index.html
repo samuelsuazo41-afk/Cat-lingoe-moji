@@ -2,96 +2,256 @@
 <html lang="ca">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0f0f0f">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cat lingo emoji</title>
-<link rel="manifest" href="./manifest.json">
-<link rel="stylesheet" href="./styles.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FF6B35">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:linear-gradient(135deg,#FF6B35 0%,#FF8C42 100%);
+  min-height:100vh;
+  color:#fff;
+  overflow-x:hidden;
+}
+.container {
+  max-width:600px;
+  margin:0 auto;
+  padding:20px;
+  padding-bottom:100px;
+}
+.header {
+  text-align:center;
+  margin-bottom:30px;
+  padding:20px 0;
+}
+.header h1 {
+  font-size:28px;
+  margin-bottom:5px;
+  text-shadow:2px 2px 4px rgba(0,0,0,0.3);
+}
+.monedes {
+  background:rgba(255,255,255,0.2);
+  padding:8px 16px;
+  border-radius:20px;
+  display:inline-block;
+  font-weight:bold;
+  font-size:18px;
+}
+.tab-content {
+  display:none;
+  animation:fadeIn 0.3s;
+}
+.tab-content.active {
+  display:block;
+}
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(10px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.nav-bar {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#1a1a1a;
+  display:flex;
+  justify-content:space-around;
+  padding:10px 0;
+  box-shadow:0 -2px 10px rgba(0,0,0,0.3);
+  z-index:1000;
+}
+.nav-item {
+  flex:1;
+  text-align:center;
+  padding:8px;
+  cursor:pointer;
+  transition:all 0.2s;
+  color:#888;
+}
+.nav-item.active {
+  color:#FF6B35;
+  transform:scale(1.1);
+}
+.nav-icon {
+  font-size:24px;
+  display:block;
+  margin-bottom:4px;
+}
+.nav-text {
+  font-size:11px;
+}
+.btn {
+  background:#FF6B35;
+  color:#fff;
+  border:none;
+  padding:12px 24px;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:all 0.2s;
+  box-shadow:0 4px 12px rgba(255,107,53,0.4);
+}
+.btn:active {
+  transform:scale(0.95);
+}
+.btn:disabled {
+  background:#555;
+  cursor:not-allowed;
+  box-shadow:none;
+}
+.sub-tab-bar {
+  display:flex;
+  gap:8px;
+  margin-bottom:15px;
+  overflow-x:auto;
+  padding-bottom:5px;
+}
+.sub-tab-btn {
+  background:rgba(255,255,255,0.1);
+  border:2px solid rgba(255,255,255,0.2);
+  color:#fff;
+  padding:8px 16px;
+  border-radius:20px;
+  cursor:pointer;
+  white-space:nowrap;
+  font-size:14px;
+}
+.sub-tab-btn.active {
+  background:#FF6B35;
+  border-color:#FF6B35;
+}
+.personatge-card {
+  background:rgba(255,255,255,0.1);
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:10px;
+  cursor:pointer;
+  transition:all 0.2s;
+  border:2px solid transparent;
+}
+.personatge-card:hover {
+  background:rgba(255,255,255,0.2);
+  transform:translateX(5px);
+}
+.personatge-card.active {
+  border-color:#FF6B35;
+  background:rgba(255,107,53,0.2);
+}
+.modal {
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:rgba(0,0,0,0.8);
+  z-index:2000;
+  align-items:center;
+  justify-content:center;
+}
+.modal.active {
+  display:flex;
+}
+.modal-content {
+  background:#2a2a2a;
+  padding:30px;
+  border-radius:20px;
+  max-width:400px;
+  text-align:center;
+}
+</style>
 </head>
 <body>
-
-<div class="header">
-  <h1 id="title">Cat lingo emoji</h1>
-  <div class="coins" id="coins">🪙 0 <span id="text-monedes">Monedes</span></div>
-</div>
-
-<!-- TAB MAPA -->
-<div id="menuPrincipal" class="tab-content active">
-  <div id="mapa"></div>
-</div>
-
-<!-- TAB MISSIO -->
-<div id="missionPanel" class="tab-content">
-  <div id="missionContent"></div>
-</div>
-
-<!-- TAB GREMI -->
-<div id="gremioPanel" class="tab-content">
-  <div class="sub-tabs">
-    <button class="sub-tab-btn" id="btnGremio" onclick="mostrarGremi('personatges', event)">Personatges</button>
-    <button class="sub-tab-btn active" id="btnBiblioteca" onclick="mostrarBibliotecaTab('diccionari', event)">Biblioteca</button>
-    <button class="sub-tab-btn" id="btnMinijocs" onclick="mostrarBibliotecaTab('minijocs', event)">Minijocs</button>
+<div class="container">
+  <div class="header">
+    <h1 id="app-titol">Cat lingo emoji</h1>
+    <div class="monedes"><span id="text-monedes">Monedes</span>: <span id="monedes">0</span></div>
   </div>
-  <div id="gremioContent"></div>
-</div>
 
-<!-- TAB LECTURA -->
-<div id="lecturaPanel" class="tab-content">
-  <div id="lecturaContent"></div>
-</div>
+  <!-- MAPA -->
+  <div id="tab-mapa" class="tab-content">
+    <div id="mapa" style="background:#1a1a1a; padding:20px; border-radius:12px; min-height:400px;">
+      Carregant mapa...
+    </div>
+  </div>
 
-<!-- TAB TIPS -->
-<div id="tipsPanel" class="tab-content">
-  <div id="tipsContent"></div>
-</div>
+  <!-- MISSIÓ -->
+  <div id="tab-missio" class="tab-content active">
+    <div id="missio-contenidor">
+      <!-- El JS pintará aquí el minijoc de frases -->
+    </div>
+  </div>
 
-<!-- TAB BOTIGA -->
-<div id="botigaPanel" class="tab-content">
-  <div class="capitol-grid" id="botigaContent"></div>
+  <!-- GREMI -->
+  <div id="tab-gremi" class="tab-content">
+    <div class="sub-tab-bar">
+      <button class="sub-tab-btn active" onclick="mostrarGremi('personatges', event)">Personatges</button>
+      <button class="sub-tab-btn" onclick="mostrarGremi('biblioteca', event)">Biblioteca</button>
+      <button class="sub-tab-btn" onclick="mostrarGremi('minijocs', event)">Minijocs</button>
+    </div>
+    <div id="gremi-contenidor">
+      <!-- El JS pintará aquí -->
+    </div>
+  </div>
+
+  <!-- LECTURA -->
+  <div id="tab-lectura" class="tab-content">
+    <div id="lectura-contenidor">
+      <!-- El JS pintará aquí -->
+    </div>
+  </div>
+
+  <!-- TIPS -->
+  <div id="tab-tips" class="tab-content">
+    <div id="tips-contenidor">
+      <!-- El JS pintará aquí -->
+    </div>
+  </div>
+
+  <!-- BOTIGA -->
+  <div id="tab-botiga" class="tab-content">
+    <div id="botiga-contenidor">
+      Carregant botiga...
+    </div>
+  </div>
 </div>
 
 <!-- NAV BAR -->
-<div class="nav">
-  <div class="nav-item active" onclick="canviarTab('menuPrincipal', event)">
+<div class="nav-bar">
+  <div class="nav-item" onclick="canviarTab('mapa', event)">
     <span class="nav-icon">🗺️</span>
-    <span id="tab-mapa-txt">Món</span>
+    <span class="nav-text" id="tab-mapa-txt">Mapa</span>
   </div>
-  <div class="nav-item" onclick="canviarTab('missionPanel', event)">
-    <span class="nav-icon">📜</span>
-    <span id="tab-missio-txt">Missió</span>
+  <div class="nav-item active" onclick="canviarTab('missio', event)">
+    <span class="nav-icon">📝</span>
+    <span class="nav-text" id="tab-missio-txt">Missió</span>
   </div>
-  <div class="nav-item" onclick="canviarTab('gremioPanel', event)">
-    <span class="nav-icon">🏰</span>
-    <span id="tab-gremi-txt">Gremi</span>
+  <div class="nav-item" onclick="canviarTab('gremi', event)">
+    <span class="nav-icon">🏛️</span>
+    <span class="nav-text" id="tab-gremi-txt">Gremi</span>
   </div>
-  <div class="nav-item" onclick="canviarTab('lecturaPanel', event)">
+  <div class="nav-item" onclick="canviarTab('lectura', event)">
     <span class="nav-icon">📖</span>
-    <span id="tab-lectura-txt">Lectura</span>
+    <span class="nav-text" id="tab-lectura-txt">Lectura</span>
   </div>
-  <div class="nav-item" onclick="canviarTab('tipsPanel', event)">
+  <div class="nav-item" onclick="canviarTab('tips', event)">
     <span class="nav-icon">💡</span>
-    <span id="tab-tips-txt">Tips</span>
+    <span class="nav-text" id="tab-tips-txt">Tips</span>
   </div>
-  <div class="nav-item" onclick="canviarTab('botigaPanel', event)">
-    <span class="nav-icon">🛒</span>
-    <span id="tab-botiga-txt">Botiga</span>
+  <div class="nav-item" onclick="canviarTab('botiga', event)">
+    <span class="nav-icon">🛍️</span>
+    <span class="nav-text" id="tab-botiga-txt">Botiga</span>
   </div>
 </div>
 
 <!-- MODAL -->
-<div id="modal" class="modal hidden">
-  <div class="modal-content">
-    <p id="modalText"></p>
-    <button class="btn" onclick="tancarModal()" style="margin-top:15px;">OK</button>
-  </div>
+<div id="modal" class="modal">
+  <div class="modal-content" id="modal-content"></div>
 </div>
 
-<!-- SCRIPTS EN ORDRE -->
-<script src="data/lectura-content.js"></script>
-<script src="data/lectura-generator.js"></script>
-<script src="data/tips-content.js"></script>
-<script src="data/tips-generator.js"></script>
-<script src="main.js"></script>
-
+<script src="js/main.js"></script>
 </body>
 </html>
