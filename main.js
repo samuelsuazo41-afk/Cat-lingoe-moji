@@ -101,6 +101,7 @@ function aplicarIdioma() {
   document.getElementById('tab-lectura-txt').textContent = LANG.tab_lectura;
   document.getElementById('tab-tips-txt').textContent = LANG.tab_tips;
   document.getElementById('tab-botiga-txt').textContent = LANG.tab_botiga;
+  document.getElementById('text-monedes').textContent = LANG.monedes;
 }
 
 function canviarTab(tab, e) {
@@ -127,7 +128,7 @@ function guardarEstat() {
 }
 
 function actualitzarUI() {
-  document.getElementById('monedes').innerHTML = `${estat.monedes} <span id="text-monedes">${LANG.monedes}</span>`;
+  document.getElementById('monedes').textContent = `🪙 ${estat.monedes}`;
 }
 
 // ===== CARREGAR DADES =====
@@ -433,11 +434,10 @@ function carregarLectura() {
   const cont = document.getElementById('lectura-contenidor');
   cont.innerHTML = `
     <h3 style="text-align:center; margin-bottom:15px;">${LANG.lectura_titol} - ${LANG.nivell} ${estat.progres.nivellActualMapa}</h3>
-    <div id="lectura-content" style="background:#1a1a1a; padding:20px; border-radius:12px; min-height:150px; font-size:16px; line-height:1.6; margin-bottom:15px;">
-      Prem "${LANG.lectura_btn}" per generar una lectura nova
-    </div>
+    <div id="lectura-content" style="background:#1a1a1a; padding:20px; border-radius:12px; min-height:150px; font-size:16px; line-height:1.6; margin-bottom:15px;"></div>
     <button class="btn" onclick="generarLectura()" style="width:100%;">${LANG.lectura_btn}</button>
   `;
+  generarLectura();
 }
 
 function generarLectura() {
@@ -483,7 +483,6 @@ function generarLectura() {
   `;
 
   document.getElementById('lectura-content').innerHTML = html;
-  generarLectura();
 }
 
 // ===== TIPS =====
@@ -639,10 +638,6 @@ function renderitzarBotiga() {
   });
 }
 
-function actualitzarUI() {
-  document.getElementById('monedes').innerHTML = `🪙 ${estat.monedes} <span id="text-monedes">${LANG.monedes}</span>`;
-}
-
 async function comprarPack(id, preu, event) {
   if (event) event.stopPropagation();
   if (estat.monedes < preu) { mostrarModal(LANG.no_prou_monedes); return; }
@@ -666,3 +661,4 @@ async function comprarPack(id, preu, event) {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
 }
+    
