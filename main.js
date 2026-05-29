@@ -95,7 +95,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 function aplicarIdioma() {
   document.getElementById('app-titol').textContent = LANG.app_titol;
-  document.getElementById('text-monedes').textContent = LANG.monedes;
   document.getElementById('tab-mapa-txt').textContent = LANG.tab_mapa;
   document.getElementById('tab-missio-txt').textContent = LANG.tab_missio;
   document.getElementById('tab-gremi-txt').textContent = LANG.tab_gremi;
@@ -484,6 +483,7 @@ function generarLectura() {
   `;
 
   document.getElementById('lectura-content').innerHTML = html;
+  generarlectura();
 }
 
 // ===== TIPS =====
