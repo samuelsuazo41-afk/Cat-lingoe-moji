@@ -449,6 +449,18 @@ const BANCO_VOCAB = {
   }
 };
 
+// ===== LECTURA =====
+function carregarLectura() {
+  const cont = document.getElementById('lectura-contenidor');
+  if (!cont) return;
+  
+  cont.innerHTML = `
+    <h3 style="text-align:center; margin-bottom:15px;">${LANG.lectura_titol}</h3>
+    <button class="btn" onclick="generarLectura()" style="width:100%; margin-bottom:15px;">${LANG.lectura_btn}</button>
+    <div id="lectura-content"></div>
+  `;
+}
+
 // GENERADOR DE LECTURA
 function generarLectura() {
   let num = estat.progres.nivellActualMapa;
