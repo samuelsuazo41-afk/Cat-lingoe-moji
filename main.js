@@ -483,7 +483,7 @@ function generarLectura() {
   `;
 
   document.getElementById('lectura-content').innerHTML = html;
-  generarlectura();
+  generarLectura();
 }
 
 // ===== TIPS =====
