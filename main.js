@@ -364,86 +364,55 @@ function comprovarMinijoc() {
 }
 
 // ===== LECTURA =====
-// PLANTILLAS DE LECTURA POR NIVEL
-const PLANTILLES_LECTURA = {
-  a1: [
-    "{persona} se despierta por la {temps}. {persona} va a {lloc}. {persona} {accio} con {objecte}.",
-    "{persona} está en {lloc} por la {temps}. {persona} {accio}. {persona} usa {objecte}.",
-    "Por la {temps} {persona} va a {lloc}. {persona} {accio} y toma {objecte}.",
-    "{persona} come {objecte} en {lloc}. Después {persona} {accio} por la {temps}.",
-    "En {lloc} {persona} {accio} con {objecte} por la {temps}."
-  ],
-  a2: [
-    "{persona} fue a {lloc} ayer por la {temps}. {persona} {accio} y compró {objecte}.",
-    "La semana pasada {persona} estuvo en {lloc}. {persona} {accio} con {objecte} por la {temps}.",
-    "Por la {temps} {persona} va a {lloc}. Allí {persona} {accio} y usa {objecte}.",
-    "{persona} {accio} en {lloc} cada día por la {temps}. {persona} lleva {objecte}.",
-    "Ayer {persona} {accio} en {lloc}. {persona} usó {objecte} por la {temps}."
-  ],
-  b1: [
-    "Este mes {persona} va a {lloc} para {accio} el {objecte}. Por la {temps} hay una reunión.",
-    "{persona} presentó el {objecte} en {lloc}. Después {persona} decidió {accio} por la {temps}.",
-    "Recientemente {persona} trabajó en {lloc}. {persona} tuvo que {accio} el {objecte} por la {temps}.",
-    "En {lloc} {persona} analiza el {objecte}. {persona} planea {accio} para la {temps}.",
-    "{persona} organizó una reunión en {lloc}. El objetivo es {accio} el {objecte} antes de la {temps}."
-  ]
-};
 
-// BANCO DE VOCABULARIO COHERENTE POR CONTEXTO
+// BANCO DE VOCABULARIO COHERENTE POR CONTEXTO - EN CATALÀ
 const BANCO_VOCAB = {
   a1: {
-    rutina_casa: {
-      persones: ["María", "Juan", "Ana", "Pau", "Laura", "Marc", "Sofía", "Alex", "Carla", "David", "Eva", "Luis"],
-      llocs: ["casa", "cocina", "dormitorio", "baño", "salón", "comedor"],
-      accions: ["desayunar", "dormir", "leer", "estudiar", "comer", "beber", "mirar", "sentarse", "levantarse", "descansar"],
-      objectes: ["pan", "agua", "leche", "libro", "mesa", "silla", "cama", "sofá", "vaso", "plato", "cuchara", "móvil"],
-      temps: ["mañana", "noche", "hoy", "ayer", "tarde", "temprano"]
+    la_perdua: {
+      persones: ["La Maria", "En Joan", "L'Ana", "En Pau"],
+      llocs: ["casa", "cuina", "saló", "dormitori", "bany", "menjador", "passadís", "balcó"],
+      objectes: ["claus", "mòbil", "llibre", "ulleres", "cartera", "moneder", "gorra", "paraigua", "motxilla", "sabates"],
+      temps: ["al matí", "a la tarda", "ahir", "avui", "ara", "després"],
+      verbs: ["busca", "troba", "mira", "obre", "tanca", "posa", "pren", "deixa", "agafa", "amaga"]
     },
-    rutina_exterior: {
-      persones: ["María", "Juan", "Ana", "Pau", "Laura", "Marc", "Sofía", "Alex", "Carla", "David"],
-      llocs: ["parque", "playa", "mercado", "biblioteca", "calle", "plaza", "tienda", "supermercado"],
-      accions: ["caminar", "jugar", "correr", "leer", "comprar", "mirar", "hablar", "sentarse", "pasear"],
-      objectes: ["móvil", "mochila", "libro", "agua", "bolsa", "monedas", "fruta", "pan", "gafas", "gorro"],
-      temps: ["tarde", "mañana", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
-    },
-    rutina_trabajo: {
-      persones: ["Sofía", "Alex", "Carla", "David", "Eva", "Luis", "Marta", "Pedro"],
-      llocs: ["trabajo", "escuela", "oficina", "clase", "aula"],
-      accions: ["trabajar", "estudiar", "leer", "escribir", "hablar", "escuchar", "aprender", "enseñar"],
-      objectes: ["móvil", "mochila", "libro", "mesa", "silla", "ordenador", "papel", "bolígrafo", "cuaderno"],
-      temps: ["mañana", "tarde", "lunes", "martes", "miércoles", "hoy", "cada día"]
+    el_dia_ocupat: {
+      persones: ["En Pau", "La Laura", "En Marc", "La Sílvia"],
+      llocs: ["escola", "parc", "botiga", "casa", "mercat", "biblioteca", "gimnàs", "piscina"],
+      objectes: ["motxilla", "pa", "aigua", "llibreta", "bolígraf", "poma", "iogurt", "samarreta", "pantalons", "sabates"],
+      temps: ["avui", "al matí", "després", "ara", "sovint", "sempre"],
+      verbs: ["va", "compra", "estudia", "menja", "juga", "corre", "llegeix", "escriu", "beu", "dorm"]
     }
   },
   a2: {
-    ocio: {
-      persones: ["mi amiga", "mi vecino", "mis padres", "mi hermano", "mi hermana", "mi compañero", "mi compañera"],
-      llocs: ["restaurante", "cinema", "biblioteca", "museo", "teatro", "cafetería", "centro comercial"],
-      accions: ["cocinar", "viajar", "leer", "comprar", "mirar", "hablar", "pasear", "escuchar", "bailar", "cantar"],
-      objectes: ["ordenador", "teléfono", "bicicleta", "mochila", "libro", "entrada", "bolsa", "cámara", "mapa"],
-      temps: ["ayer", "mañana", "la semana pasada", "el mes pasado", "hoy", "este fin de semana"]
+    el_plan_secret: {
+      persones: ["La Marta", "En David", "La Carla", "En Jordi"],
+      llocs: ["biblioteca", "cafeteria", "oficina", "parc", "museu", "teatre", "restaurant", "platja"],
+      objectes: ["carta", "regal", "invitació", "mapa", "fotografia", "diari", "clau", "calendari", "llista", "sobre"],
+      temps: ["ahir", "demà", "la setmana passada", "aquest matí", "avui", "pròximament"],
+      verbs: ["prepara", "amaga", "descobreix", "escriu", "llegeix", "organitza", "convida", "planeja", "sorprèn", "celebra"]
     },
-    rutina: {
-      persones: ["la profesora", "mi compañero", "mi jefa", "el doctor", "la enfermera", "mi amigo"],
-      llocs: ["oficina", "hospital", "escuela", "clínica", "centro", "aula"],
-      accions: ["escribir", "hablar", "trabajar", "estudiar", "explicar", "preguntar", "responder", "ayudar"],
-      objectes: ["ordenador", "teléfono", "documento", "libro", "carpeta", "bolígrafo", "informe", "papel"],
-      temps: ["hoy", "mañana", "el año pasado", "esta semana", "cada día", "a veces", "siempre"]
+    el_problema: {
+      persones: ["En Luis", "L'Eva", "En Jordi", "La Núria"],
+      llocs: ["feina", "cotxe", "estació", "hospital", "aeroport", "banc", "farmàcia", "universitat"],
+      objectes: ["claus del cotxe", "ordinador", "bitllet", "medicina", "document", "telèfon", "paraigua", "ulleres", "cartera", "equipatge"],
+      temps: ["aquest matí", "ahir a la nit", "demà", "aquesta setmana", "fa poc", "ara mateix"],
+      verbs: ["trenca", "perd", "arregla", "demana", "explica", "busca", "troba", "ajuda", "comprèn", "soluciona"]
     }
   },
   b1: {
-    trabajo: {
-      persones: ["mi jefe", "mis compañeros", "la directora", "el gerente", "el cliente", "el equipo", "los socios"],
-      llocs: ["empresa", "universidad", "reunión", "oficina", "sala de juntas", "despacho", "centro"],
-      accions: ["negociar", "presentar", "organizar", "analizar", "planificar", "dirigir", "coordinar", "evaluar", "decidir"],
-      objectes: ["proyecto", "informe", "documento", "propuesta", "plan", "estrategia", "datos", "presentación", "contrato"],
-      temps: ["este mes", "el año pasado", "pronto", "recientemente", "esta semana", "el trimestre pasado", "ahora"]
+    el_misteri: {
+      persones: ["La Sofía", "En Pere", "La Júlia", "En Toni"],
+      llocs: ["despatx", "museu", "hotel", "teatre", "arxiu", "galeria", "laboratori", "mansió"],
+      objectes: ["document", "diamant", "clau antiga", "fotografia", "pista", "enigma", "carta secreta", "quadre", "dossier", "prova"],
+      temps: ["aquest mes", "la setmana passada", "fa un any", "recentment", "en aquell moment", "poc després"],
+      verbs: ["investiga", "sospecha", "amaga", "descobreix", "revela", "analitza", "compara", "dedueix", "confirma", "resol"]
     },
-    formal: {
-      persones: ["los clientes", "el director", "la directora", "los participantes", "los asistentes", "los expertos"],
-      llocs: ["conferencia", "entrevista", "seminario", "evento", "sala", "auditorio"],
-      accions: ["decidir", "presentar", "analizar", "explicar", "discutir", "evaluar", "revisar", "aprobar"],
-      objectes: ["estrategia", "propuesta", "informe", "presentación", "análisis", "resultado", "conclusión", "documento"],
-      temps: ["este mes", "pronto", "durante el evento", "al final", "al principio", "ahora", "esta tarde"]
+    la_decisio: {
+      persones: ["En Alex", "La Núria", "En Toni", "La Marta"],
+      llocs: ["universitat", "empresa", "tribunal", "aeroport", "oficina", "conferència", "reunió", "despatx"],
+      objectes: ["contracte", "passaport", "carta", "proposta", "informe", "presentació", "projecte", "oferta", "document", "acord"],
+      temps: ["avui", "aquest any", "pròximament", "aquest mes", "aviat", "en breu"],
+      verbs: ["decideix", "nega", "accepta", "firma", "marxa", "proposa", "negocia", "presenta", "defensa", "conclou"]
     }
   }
 };
@@ -452,7 +421,7 @@ const BANCO_VOCAB = {
 function carregarLectura() {
   const cont = document.getElementById('lectura-contenidor');
   if (!cont) return;
-  
+
   cont.innerHTML = `
     <h3 style="text-align:center; margin-bottom:15px;">${LANG.lectura_titol}</h3>
     <button class="btn" onclick="generarLectura()" style="width:100%; margin-bottom:15px;">${LANG.lectura_btn}</button>
@@ -460,81 +429,88 @@ function carregarLectura() {
   `;
 }
 
-// GENERADOR DE LECTURA
+// GENERADOR DE LECTURA - MINI HISTÒRIES 3 PARÀGRAFS
 function generarLectura() {
   let num = estat.progres.nivellActualMapa;
   let nivell = mapaNivellALletra(num);
   let contextos = BANCO_VOCAB[nivell];
-  let plantilles = PLANTILLES_LECTURA[nivell];
 
-  if (!plantilles || plantilles.length === 0 ||!contextos) {
+  if (!contextos) {
     document.getElementById('lectura-content').innerHTML = "Encara no hi ha lectures d’aquest nivell.";
     return;
   }
 
-  // Elige un contexto coherente: casa, trabajo, ocio...
+  // Escollim 1 història i 1 protagonista
   let keys = Object.keys(contextos);
-  let contexto = contextos[keys[Math.floor(Math.random() * keys.length)]];
+  let historia = contextos[keys[Math.floor(Math.random() * keys.length)]];
+  let protagonista = historia.persones[Math.floor(Math.random() * historia.persones.length)];
 
-  // Monta 10 frases usando solo vocabulario del mismo contexto
+  // Agafem paraules aleatòries del tema
+  let p1_lloc = historia.llocs[Math.floor(Math.random()*historia.llocs.length)];
+  let p1_obj = historia.objectes[Math.floor(Math.random()*historia.objectes.length)];
+  let p1_verb = historia.verbs[Math.floor(Math.random()*historia.verbs.length)];
+  let p2_lloc = historia.llocs[Math.floor(Math.random()*historia.llocs.length)];
+  let p2_obj = historia.objectes[Math.floor(Math.random()*historia.objectes.length)];
+  let p2_verb = historia.verbs[Math.floor(Math.random()*historia.verbs.length)];
+  let p3_verb = historia.verbs[Math.floor(Math.random()*historia.verbs.length)];
+  let p3_obj = historia.objectes[Math.floor(Math.random()*historia.objectes.length)];
+
+  // Generem 3 paràgrafs segons nivell - estructura narrativa
   let text = "";
-  for(let i = 0; i < 10; i++) {
-    let plantilla = plantilles[Math.floor(Math.random() * plantilles.length)];
-    let frase = plantilla
-   .replace(/{persona}/g, () => contexto.persones[Math.floor(Math.random()*contexto.persones.length)])
-   .replace(/{lloc}/g, () => contexto.llocs[Math.floor(Math.random()*contexto.llocs.length)])
-   .replace(/{accio}/g, () => contexto.accions[Math.floor(Math.random()*contexto.accions.length)])
-   .replace(/{objecte}/g, () => contexto.objectes[Math.floor(Math.random()*contexto.objectes.length)])
-   .replace(/{temps}/g, () => contexto.temps[Math.floor(Math.random()*contexto.temps.length)]);
-    text += frase + " ";
-  }
-
-  // Vocabulario coherente del mismo contexto para mostrar
-  let vocabHTML = [];
-  let cats = ["accions", "objectes", "llocs"];
-  for(let i = 0; i < 10; i++) {
-    let cat = cats[Math.floor(Math.random()*cats.length)];
-    let paraula = contexto[cat][Math.floor(Math.random()*contexto[cat].length)];
-    vocabHTML.push(
-      `<div style="display:flex; justify-content:space-between; margin:5px 0; font-size:15px;">
-        <span style="color:#4CAF50;">${paraula}</span>
-        <span style="opacity:0.8;">${paraula}</span>
-      </div>`
-    );
-  }
-
-  // Pregunta adaptada al nivel para progresión
-  let pregunta, resposta;
   if(nivell === "a1") {
-    pregunta = "¿Dónde ocurre la historia?";
-    resposta = `En ${contexto.llocs[0]}`;
-  } else if(nivell === "a2") {
-    pregunta = "¿Qué hizo la persona?";
-    resposta = `La persona ${contexto.accions[0]}`;
-  } else {
-    pregunta = "¿Cuál es el objetivo del texto?";
-    resposta = `${contexto.accions[0]} el ${contexto.objectes[0]}`;
+    text = `<p>${protagonista} és a ${p1_lloc}. ${protagonista} ${p1_verb} ${p1_obj} ${historia.temps[0]}.</p>
+            <p>Després ${protagonista} va a ${p2_lloc}. Allà ${protagonista} no ${p2_verb} ${p2_obj}.</p>
+            <p>Al final ${protagonista} ${p3_verb} ${p3_obj}. Ara tot és bé.</p>`;
   }
+  else if(nivell === "a2") {
+    text = `<p>${protagonista} està a ${p1_lloc}. Té ${p1_obj} i ${p1_verb} cada dia.</p>
+            <p>${historia.temps[1]}, ${protagonista} va a ${p2_lloc} per ${p2_verb} ${p2_obj}, però hi ha un problema.</p>
+            <p>${protagonista} ${p3_verb} ${p3_obj} i resol el problema. Tot va bé al final.</p>`;
+  }
+  else { // b1
+    text = `<p>${protagonista} treballa a ${p1_lloc}. Aquest mes, ${protagonista} ha de ${p1_verb} ${p1_obj} important.</p>
+            <p>${historia.temps[2]}, quan ${protagonista} intenta ${p2_verb} ${p2_obj} a ${p2_lloc}, descobreix que alguna cosa no va bé.</p>
+            <p>Finalment ${protagonista} ${p3_verb} ${p3_obj} i revela la veritat. La història acaba bé.</p>`;
+  }
+
+  // Vocabulari: agafem 14 paraules del tema actual
+  let vocabulariTema = [...historia.llocs,...historia.objectes,...historia.verbs];
+  vocabulariTema = [...new Set(vocabulariTema)].sort(() => 0.5 - Math.random()).slice(0, 14);
+
+  let vocabHTML = vocabulariTema.map(p =>
+    `<div style="display:flex; justify-content:space-between; margin:4px 0; font-size:15px;">
+      <span style="color:#4CAF50;">${p}</span>
+      <span style="opacity:0.8;">${p}</span>
+    </div>`
+  ).join('');
+
+  // Nota gramatical segons nivell
+  let notaGramatical = "";
+  if(nivell === "a1") notaGramatical = "Nota: En català posem l'article abans del nom: <i>la casa, el llibre</i>";
+  else if(nivell === "a2") notaGramatical = "Nota: Usem el passat perifràstic: <i>vaig anar, va estudiar</i>";
+  else notaGramatical = "Nota: El subjuntiu s'usa després de <i>que</i>: <i>vull que vinguis</i>";
+
+  let pregunta = nivell === "a1"? `On és ${protagonista}?` :
+                 nivell === "a2"? `Quin problema té ${protagonista}?` :
+                 `Què descobreix ${protagonista}?`;
 
   let html = `
-    <div style="margin-bottom:15px;">
-      <p style="margin:0 0 15px 0; text-align:justify; line-height:1.7; font-size:16px;">${text}</p>
-    </div>
-
+    <div style="margin-bottom:15px; line-height:1.8; font-size:16px;">${text}</div>
     <div style="background:#1f1f1f; padding:14px; border-radius:10px; margin-bottom:15px;">
-      <div style="color:#4CAF50; font-weight:bold; font-size:16px; margin-bottom:10px;">Vocabulari nou:</div>
-      ${vocabHTML.join('')}
+      <div style="color:#4CAF50; font-weight:bold; font-size:16px; margin-bottom:10px;">Vocabulari del tema:</div>
+      ${vocabHTML}
     </div>
-
+    <div style="background:#1a2a1a; padding:12px; border-radius:8px; margin-bottom:15px; font-size:14px; border-left:3px solid #4CAF50;">
+      ${notaGramatical}
+    </div>
     <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:12px;">
-      <div style="font-weight:bold; margin-bottom:6px;">Pregunta:</div>
+      <div style="font-weight:bold; margin-bottom:6px;">Pregunta de comprensió:</div>
       <div style="margin-bottom:8px;">${pregunta}</div>
-      <div style="opacity:0.6; font-size:14px;">Resposta: ${resposta}</div>
     </div>
   `;
 
   document.getElementById('lectura-content').innerHTML = html;
-  }
+}
   
 // ===== TIPS =====
 const dadesTips = {
