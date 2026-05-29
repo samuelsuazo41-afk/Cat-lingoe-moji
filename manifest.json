@@ -1,11 +1,11 @@
 {
-  "name": "Cat Lingo Emoji",
-  "short_name": "CatLingo",
+  "name": "Kat Lingo Emoji",
+  "short_name": "Kat Lingo",
   "description": "Aprèn català amb RPG d'emojis",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0f0f0f",
-  "theme_color": "#4CAF50",
+  "background_color": "#FFD700",
+  "theme_color": "#C60C30",
   "orientation": "portrait",
   "icons": [
     {
@@ -19,7 +19,7 @@
       "type": "image/png"
     },
     {
-      "src": "./icon-512.png",
+      "src": "./icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
