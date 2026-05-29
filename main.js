@@ -1,5 +1,4 @@
 // main.js - Cat lingo emoji - AMB LECTURA I TIPS INTEGRATS
-
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
@@ -47,8 +46,28 @@ let estat = {
 };
 
 const LANGS = {
-  es: {app_titol: "Cat lingo emoji", monedes: "Monedas", tab_mapa: "Mundo", tab_missio: "Misión", tab_gremi: "Gremio", tab_lectura: "Lectura", tab_tips: "Tips", tab_botiga: "Tienda", biblioteca: "Biblioteca", biblioteca_desc: "Tots els personatges disponibles per les teves històries", biblioteca_cta: "💡 Compra packs de emoji en la tienda y desbloquea toda la biblioteca!", minijoc_titol: "Arma la frase", minijoc_desc: "Tria els emojis per formar la frase", comprovar: "Comprovar", correcte: "Correcte!", incorrecte: "No és així. Era:", no_prou_monedes: "No tens prou monedes!", comprat: "Comprat", tria_personatge: "Tria el teu personatge", nom_personatge: "Com et dius?", canviar_personatge: "Canviar Personatge", lectura_titol: "Lectura", lectura_btn: "Generar Lectura", tips_titol: "Tips", tips_btn: "Nou Tip"},
-  ca: {app_titol: "Cat lingo emoji", monedes: "Monedes", tab_mapa: "Món", tab_missio: "Missió", tab_gremi: "Gremi", tab_lectura: "Lectura", tab_tips: "Tips", tab_botiga: "Botiga", biblioteca: "Biblioteca", biblioteca_desc: "Tots els personatges disponibles per les teves històries", biblioteca_cta: "💡 Compra packs d'emoji a la botiga i desbloqueja tota la biblioteca!", minijoc_titol: "Arma la frase", minijoc_desc: "Tria els emojis per formar la frase", comprovar: "Comprovar", correcte: "Correcte!", incorrecte: "No és així. Era:", no_prou_monedes: "No tens prou monedes!", comprat: "Comprat", tria_personatge: "Tria el teu personatge", nom_personatge: "Com et dius?", canviar_personatge: "Canviar Personatge", lectura_titol: "Lectura", lectura_btn: "Generar Lectura", tips_titol: "Tips", tips_btn: "Nou Tip"}
+  es: {
+    app_titol: "Cat lingo emoji", monedes: "Monedas", tab_mapa: "Mundo", tab_missio: "Misión",
+    tab_gremi: "Gremio", tab_lectura: "Lectura", tab_tips: "Tips", tab_botiga: "Tienda",
+    biblioteca: "Biblioteca", biblioteca_desc: "Tots els personatges disponibles per les teves històries",
+    biblioteca_cta: "💡 Compra packs de emoji en la tienda y desbloquea toda la biblioteca!",
+    minijoc_titol: "Arma la frase", minijoc_desc: "Tria els emojis per formar la frase",
+    comprovar: "Comprovar", correcte: "Correcte!", incorrecte: "No és així. Era:",
+    no_prou_monedes: "No tens prou monedes!", comprat: "Comprat", tria_personatge: "Tria el teu personatge",
+    nom_personatge: "Com et dius?", canviar_personatge: "Canviar Personatge", lectura_titol: "Lectura",
+    lectura_btn: "Generar Lectura", tips_titol: "Tips", tips_btn: "Nou Tip"
+  },
+  ca: {
+    app_titol: "Cat lingo emoji", monedes: "Monedes", tab_mapa: "Món", tab_missio: "Missió",
+    tab_gremi: "Gremi", tab_lectura: "Lectura", tab_tips: "Tips", tab_botiga: "Botiga",
+    biblioteca: "Biblioteca", biblioteca_desc: "Tots els personatges disponibles per les teves històries",
+    biblioteca_cta: "💡 Compra packs d'emoji a la botiga i desbloqueja tota la biblioteca!",
+    minijoc_titol: "Arma la frase", minijoc_desc: "Tria els emojis per formar la frase",
+    comprovar: "Comprovar", correcte: "Correcte!", incorrecte: "No és així. Era:",
+    no_prou_monedes: "No tens prou monedes!", comprat: "Comprat", tria_personatge: "Tria el teu personatge",
+    nom_personatge: "Com et dius?", canviar_personatge: "Canviar Personatge", lectura_titol: "Lectura",
+    lectura_btn: "Generar Lectura", tips_titol: "Tips", tips_btn: "Nou Tip"
+  }
 };
 
 let idioma = localStorage.getItem('cat_idioma') || 'ca';
@@ -67,11 +86,7 @@ const NIVELL_MINIJOC = {minEmojis: 2, maxEmojis: 5, nivelActual: parseInt(localS
 
 function vibrar() { if (navigator.vibrate) navigator.vibrate(20); }
 function quitarSkinTone(emoji) { return emoji.replace(/[\u{1F3FB}-\u{1F3FF}]/u, ''); }
-
-function mostrarModal(text) {
-  document.getElementById('modalText').textContent = text;
-  document.getElementById('modal').classList.remove('hidden');
-}
+function mostrarModal(text) { document.getElementById('modalText').textContent = text; document.getElementById('modal').classList.remove('hidden'); }
 function tancarModal() { document.getElementById('modal').classList.add('hidden'); }
 
 async function carregarDades() {
@@ -95,7 +110,7 @@ async function carregarDades() {
   EMOJIS_JUGABLES.forEach(e => {
     const cat = e.categoria || 'altres';
     if (!CATEGORIES_EMOJI[cat]) CATEGORIES_EMOJI[cat] = [];
-    if (!CATEGORIES_EMOJI[cat].includes(e.emoji)) { CATEGORIES_EMOJI[cat].push(e.emoji); }
+    if (!CATEGORIES_EMOJI[cat].includes(e.emoji)) CATEGORIES_EMOJI[cat].push(e.emoji);
   });
 
   try {
@@ -105,15 +120,8 @@ async function carregarDades() {
   } catch(err) { FRASES_MINIJOC = []; }
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-  aplicarIdioma();
-  await carregarDades();
-  actualitzarUI();
-  canviarTab('missionPanel', null);
-});
-
 function aplicarIdioma() {
-  document.getElementById('title').textContent = LANG.app_titol;
+  document.getElementById('app-titol').textContent = LANG.app_titol;
   document.getElementById('text-monedes').textContent = LANG.monedes;
   document.getElementById('tab-mapa-txt').textContent = LANG.tab_mapa;
   document.getElementById('tab-missio-txt').textContent = LANG.tab_missio;
@@ -126,15 +134,19 @@ function aplicarIdioma() {
 function canviarTab(tab, e) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  document.getElementById(tab).classList.add('active');
-  if(e && e.target) e.target.closest('.nav-item').classList.add('active');
 
-  if(tab === 'menuPrincipal') {carregarMapa();}
-  if(tab === 'missionPanel') {carregarMissioTab();}
-  if(tab === 'gremioPanel') {mostrarGremi('biblioteca', e);}
-  if(tab === 'lecturaPanel') {mostrarLecturaTab();}
-  if(tab === 'tipsPanel') {mostrarTipsTab();}
-  if(tab === 'botigaPanel') {carregarBotiga();}
+  const tabEl = document.getElementById('tab-' + tab);
+  if(!tabEl) { console.error('Tab no existe:', 'tab-' + tab); return; }
+  tabEl.classList.add('active');
+
+  if(e) e.target.closest('.nav-item').classList.add('active');
+
+  if(tab === 'mapa') carregarMapa();
+  if(tab === 'missio') carregarMissioTab();
+  if(tab === 'gremi') mostrarGremi('biblioteca', e);
+  if(tab === 'lectura') mostrarLecturaTab();
+  if(tab === 'tips') mostrarTipsTab();
+  if(tab === 'botiga') carregarBotiga();
 }
 
 function carregarMapa() {
@@ -144,6 +156,7 @@ function carregarMapa() {
     <h3>🗺️ Mapa</h3><p>Ara mateix el joc se centra en el minijoc i la biblioteca.</p>
   </div>`;
 }
+
 function carregarMissioTab() { novaFraseMinijoc(); }
 
 function guardarEstat() {
@@ -153,6 +166,7 @@ function guardarEstat() {
   localStorage.setItem('cat_personatge', JSON.stringify(estat.personatge));
   localStorage.setItem('cat_nivell_minijoc', NIVELL_MINIJOC.nivelActual);
 }
+
 function actualitzarUI() {
   document.getElementById('coins').innerHTML = `🪙 ${estat.monedes} <span id="text-monedes">${LANG.monedes}</span>`;
 }
@@ -161,7 +175,9 @@ function actualitzarUI() {
 function mostrarGremi(tab, e) {
   document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
   if(e) e.target.classList.add('active');
-  const cont = document.getElementById('gremioContent');
+
+  const cont = document.getElementById('gremi-contenidor');
+  if(!cont) return;
   cont.innerHTML = '';
 
   if(tab === 'personatges') {
@@ -184,14 +200,16 @@ function mostrarGremi(tab, e) {
       </div>`;
     }
   }
-  if(tab === 'biblioteca') { mostrarBibliotecaTab('diccionari'); }
-  if(tab === 'minijocs') { mostrarBibliotecaTab('minijocs'); }
+  if(tab === 'biblioteca') mostrarBibliotecaTab('diccionari');
+  if(tab === 'minijocs') mostrarBibliotecaTab('minijocs');
 }
 
 function mostrarBibliotecaTab(tab, e) {
-  document.querySelectorAll('#gremioPanel.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
   if(e) e.target.classList.add('active');
-  const cont = document.getElementById('gremioContent');
+
+  const cont = document.getElementById('gremi-contenidor');
+  if(!cont) return;
 
   if(tab === 'diccionari') {
     const desbloquejats = new Set(estat.emojisDesbloquejats || []);
@@ -221,17 +239,14 @@ function mostrarBibliotecaTab(tab, e) {
     }
     cont.innerHTML = html;
   }
-
   if(tab === 'minijocs') {
     cont.innerHTML = `
       <h3>${LANG.minijoc_titol}</h3>
       <p id="minijoc-nivell" style="color:#4CAF50; font-weight:bold; margin:8px 0;">Nivell ${NIVELL_MINIJOC.nivelActual} - ${NIVELL_MINIJOC.minEmojis} emojis</p>
       <p style="color:var(--text-sec); margin:12px 0;">${LANG.minijoc_desc}</p>
-      <div id="minijoc-frase" style="background:#222; padding:15px; border-radius:12px; min-height:50px; margin-bottom:15px; text-align:center; font-size:18px;">
-        Prem "Nova frase" per començar
-      </div>
+      <div id="minijoc-frase" style="background:#222; padding:15px; border-radius:12px; min-height:50px; margin-bottom:15px; text-align:center; font-size:18px;"> Prem "Nova frase" per començar </div>
       <button class="btn btn-sec" onclick="novaFraseMinijoc()" style="margin-bottom:15px;">Nova frase</button>
-      <div id="minijoc-emojis" class="emoji-grid"></div>
+      <div id="minijoc-emojis" class="emoji-grid" style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:15px;"></div>
       <div id="minijoc-triats" style="background:#222; padding:15px; border-radius:12px; min-height:50px; margin:15px 0; text-align:center; font-size:24px;"></div>
       <button class="btn" onclick="comprovarMinijoc()">${LANG.comprovar}</button>
       <div id="minijoc-feedback" style="margin-top:15px;"></div>
@@ -242,7 +257,8 @@ function mostrarBibliotecaTab(tab, e) {
 
 // PESTANYA LECTURA
 function mostrarLecturaTab() {
-  const cont = document.getElementById('lecturaContent');
+  const cont = document.getElementById('lectura-contenidor');
+  if(!cont) return;
   cont.innerHTML = `
     <h3 style="text-align:center; margin-bottom:15px;">${LANG.lectura_titol}</h3>
     <div id="lectura-content" style="background:#1a1a1a; padding:20px; border-radius:12px; min-height:150px; font-size:16px; line-height:1.6; margin-bottom:15px;">
@@ -251,6 +267,7 @@ function mostrarLecturaTab() {
     <button class="btn" onclick="generarLectura()" style="width:100%;">${LANG.lectura_btn}</button>
   `;
 }
+
 function generarLectura() {
   const text = generarTextLectura(1, idioma);
   document.getElementById('lectura-content').textContent = text;
@@ -258,7 +275,8 @@ function generarLectura() {
 
 // PESTANYA TIPS
 function mostrarTipsTab() {
-  const cont = document.getElementById('tipsContent');
+  const cont = document.getElementById('tips-contenidor');
+  if(!cont) return;
   cont.innerHTML = `
     <h3 style="text-align:center; margin-bottom:15px;">${LANG.tips_titol}</h3>
     <div id="tips-content" style="background:#1a1a1a; padding:20px; border-radius:12px; min-height:100px; font-size:16px; line-height:1.6; margin-bottom:15px;">
@@ -267,6 +285,7 @@ function mostrarTipsTab() {
     <button class="btn" onclick="generarTip()" style="width:100%;">${LANG.tips_btn}</button>
   `;
 }
+
 function generarTip() {
   const tip = generarTipGramatica(idioma);
   document.getElementById('tips-content').textContent = tip;
@@ -295,16 +314,16 @@ function novaFraseMinijoc() {
 function generarEmojisParaFraseCorta(frase) {
   const emojisJugador = EMOJIS_JUGABLES.map(e => e.emoji);
   const emojisFalsos = emojisJugador
-.filter(e =>!frase.solucio.some(eSol => quitarSkinTone(e) === quitarSkinTone(eSol)))
-.sort(() => 0.5 - Math.random()).slice(0, 10 - frase.solucio.length);
+   .filter(e =>!frase.solucio.some(eSol => quitarSkinTone(e) === quitarSkinTone(eSol)))
+   .sort(() => 0.5 - Math.random()).slice(0, 10 - frase.solucio.length);
   const emojisAMostrar = [...frase.solucio,...emojisFalsos].sort(() => 0.5 - Math.random());
   estat.minijoc.emojisDisponibles = emojisAMostrar;
   let html = '';
   emojisAMostrar.forEach((emoji, i) => {
     const emojiData = EMOJIS_JUGABLES.find(e => quitarSkinTone(e.emoji) === quitarSkinTone(emoji));
-    html += `<div class="emoji-item" onclick="triarEmojiMinijoc(${i})" style="cursor:pointer;">
-      <div class="emoji-large">${emoji}</div>
-      <div class="emoji-name">${emojiData?.nom_cat || ''}</div>
+    html += `<div class="emoji-item" onclick="triarEmojiMinijoc(${i})" style="cursor:pointer; text-align:center; padding:10px; background:#333; border-radius:8px;">
+      <div style="font-size:36px;">${emoji}</div>
+      <div style="font-size:11px; color:#aaa;">${emojiData?.nom_cat || ''}</div>
     </div>`;
   });
   document.getElementById('minijoc-emojis').innerHTML = html;
@@ -322,9 +341,9 @@ function generarFraseDinamica(plantilla, emojisJugador) {
   let text = plantilla.text;
   let solucio = [];
   for (const cat of plantilla.categories) {
-    const emojisDisponibles = CATEGORIES_EMOJI[cat].filter(eBase =>
+    const emojisDisponibles = CATEGORIES_EMOJI[cat]?.filter(eBase =>
       emojisJugador.some(eJug => quitarSkinTone(eJug) === quitarSkinTone(eBase))
-    );
+    ) || [];
     if (!emojisDisponibles || emojisDisponibles.length === 0) {
       return generarFraseDinamica(FRASES_MINIJOC[Math.floor(Math.random() * FRASES_MINIJOC.length)], emojisJugador);
     }
@@ -384,7 +403,8 @@ function canviarPersonatge() {
 
 // BOTIGA
 async function carregarBotiga() {
-  const cont = document.getElementById('botigaContent');
+  const cont = document.getElementById('botiga-contenidor');
+  if(!cont) return;
   try {
     const res = await fetch('data/botiga_emojis.json');
     const data = await res.json();
@@ -397,21 +417,20 @@ async function carregarBotiga() {
 }
 
 function renderitzarBotiga() {
-  const cont = document.getElementById('botigaContent');
+  const cont = document.getElementById('botiga-contenidor');
   if (!cont ||!estat.packs_botiga) return;
   cont.innerHTML = '';
   estat.packs_botiga.forEach(pack => {
     const comprat = estat.compres.includes(pack.id);
     const card = document.createElement('div');
     card.className = 'capitol-card';
+    card.style.cssText = 'background:#2a2a2a; padding:15px; border-radius:12px; text-align:center;';
     card.innerHTML = `
-      <div class="capitol-icona">🎁</div>
-      <h3>${pack.nom}</h3>
-      <p style="color:var(--text-sec); margin:8px 0;">${pack.descripcio}</p>
-      <p style="font-size:24px;">${pack.emojis.map(e => e.emoji).join(' ')}</p>
-      <button class="btn ${comprat? 'btn-sec' : ''}"
-              onclick="comprarPack('${pack.id}', ${pack.preu}, event)"
-              ${comprat? 'disabled' : ''}>
+      <div style="font-size:48px; margin-bottom:10px;">🎁</div>
+      <h3 style="margin:10px 0;">${pack.nom}</h3>
+      <p style="color:#aaa; margin:8px 0; font-size:14px;">${pack.descripcio}</p>
+      <p style="font-size:24px; margin:10px 0;">${pack.emojis.map(e => e.emoji).join(' ')}</p>
+      <button class="btn ${comprat? 'btn-sec' : ''}" onclick="comprarPack('${pack.id}', ${pack.preu}, event)" ${comprat? 'disabled' : ''}>
         ${comprat? LANG.comprat : `🪙 ${pack.preu}`}
       </button>
     `;
@@ -421,19 +440,14 @@ function renderitzarBotiga() {
 
 async function comprarPack(id, preu, event) {
   if (event) event.stopPropagation();
-  if (estat.monedes < preu) {
-    mostrarModal(LANG.no_prou_monedes);
-    return;
-  }
+  if (estat.monedes < preu) { mostrarModal(LANG.no_prou_monedes); return; }
   vibrar();
   estat.monedes -= preu;
   estat.compres.push(id);
   const pack = estat.packs_botiga.find(p => p.id === id);
   if (pack) {
     pack.emojis.forEach(e => {
-      if (!estat.emojisDesbloquejats.includes(e.emoji)) {
-        estat.emojisDesbloquejats.push(e.emoji);
-      }
+      if (!estat.emojisDesbloquejats.includes(e.emoji)) estat.emojisDesbloquejats.push(e.emoji);
     });
     await carregarDades();
   }
@@ -445,7 +459,6 @@ async function comprarPack(id, preu, event) {
 }
 
 // ============ GENERADORS INTEGRATS ============
-
 const LECTURA_CONTENT = {
  1: {
     subjectes: ["El gat", "La noia", "El nen", "La casa", "El gos", "La mare", "El pare", "La nena", "El llibre", "La taula", "El sol", "La lluna", "La música", "El teatre", "La flor", "El cotxe", "La platja", "El parc", "L’escola", "El carrer"],
@@ -479,7 +492,10 @@ const LECTURA_CONTENT = {
   }
 };
 
-function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function rand(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 function generarTextLectura(nivell, lang) {
   const D = LECTURA_CONTENT[nivell];
   let parts = [];
@@ -500,7 +516,7 @@ const TIPS_CONTENT = {
     "Els pronoms febles van davant del verb: 'me'l dono'.",
     "El plural femení acaba en -es: la casa, les cases.",
     "Per dir l'hora: 'És la una' però 'Són les dues'.",
-        "Els dies de la setmana no porten majúscula en català.",
+    "Els dies de la setmana no porten majúscula en català.",
     "El diminutiu -et/-eta: gos > gosset, casa > caseta.",
     "La preposició 'de' + article: de + el = del. Ex: el llibre del nen.",
     "Els colors concorden en gènere i nombre: camisa blanca, camises blanques.",
