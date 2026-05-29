@@ -123,23 +123,6 @@ body {
   background:#FF6B35;
   border-color:#FF6B35;
 }
-.personatge-card {
-  background:rgba(255,255,255,0.1);
-  padding:15px;
-  border-radius:12px;
-  margin-bottom:10px;
-  cursor:pointer;
-  transition:all 0.2s;
-  border:2px solid transparent;
-}
-.personatge-card:hover {
-  background:rgba(255,255,255,0.2);
-  transform:translateX(5px);
-}
-.personatge-card.active {
-  border-color:#FF6B35;
-  background:rgba(255,107,53,0.2);
-}
 .modal {
   display:none;
   position:fixed;
@@ -162,64 +145,53 @@ body {
   max-width:400px;
   text-align:center;
 }
+.emoji-grid {
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
+  margin-bottom:15px;
+}
 </style>
 </head>
 <body>
 <div class="container">
   <div class="header">
     <h1 id="app-titol">Cat lingo emoji</h1>
-    <div class="monedes"><span id="text-monedes">Monedes</span>: <span id="monedes">0</span></div>
+    <div class="monedes"><span id="text-monedes">Monedes</span>: <span id="coins">0</span></div>
   </div>
 
-  <!-- MAPA -->
   <div id="tab-mapa" class="tab-content">
     <div id="mapa" style="background:#1a1a1a; padding:20px; border-radius:12px; min-height:400px;">
       Carregant mapa...
     </div>
   </div>
 
-  <!-- MISSIÓ -->
   <div id="tab-missio" class="tab-content active">
-    <div id="missio-contenidor">
-      <!-- El JS pintará aquí el minijoc de frases -->
-    </div>
+    <div id="missio-contenidor"></div>
   </div>
 
-  <!-- GREMI -->
   <div id="tab-gremi" class="tab-content">
     <div class="sub-tab-bar">
       <button class="sub-tab-btn active" onclick="mostrarGremi('personatges', event)">Personatges</button>
       <button class="sub-tab-btn" onclick="mostrarGremi('biblioteca', event)">Biblioteca</button>
       <button class="sub-tab-btn" onclick="mostrarGremi('minijocs', event)">Minijocs</button>
     </div>
-    <div id="gremi-contenidor">
-      <!-- El JS pintará aquí -->
-    </div>
+    <div id="gremi-contenidor"></div>
   </div>
 
-  <!-- LECTURA -->
   <div id="tab-lectura" class="tab-content">
-    <div id="lectura-contenidor">
-      <!-- El JS pintará aquí -->
-    </div>
+    <div id="lectura-contenidor"></div>
   </div>
 
-  <!-- TIPS -->
   <div id="tab-tips" class="tab-content">
-    <div id="tips-contenidor">
-      <!-- El JS pintará aquí -->
-    </div>
+    <div id="tips-contenidor"></div>
   </div>
 
-  <!-- BOTIGA -->
   <div id="tab-botiga" class="tab-content">
-    <div id="botiga-contenidor">
-      Carregant botiga...
-    </div>
+    <div id="botiga-contenidor">Carregant botiga...</div>
   </div>
 </div>
 
-<!-- NAV BAR -->
 <div class="nav-bar">
   <div class="nav-item" onclick="canviarTab('mapa', event)">
     <span class="nav-icon">🗺️</span>
@@ -247,11 +219,13 @@ body {
   </div>
 </div>
 
-<!-- MODAL -->
 <div id="modal" class="modal">
-  <div class="modal-content" id="modal-content"></div>
+  <div class="modal-content">
+    <p id="modalText"></p>
+    <button class="btn" onclick="tancarModal()" style="margin-top:15px;">OK</button>
+  </div>
 </div>
 
-<script src="js/main.js"></script>
+<script src="main.js"></script>
 </body>
 </html>
