@@ -47,8 +47,8 @@ let estat = {
 };
 
 const LANGS = {
-  es: {app_titol: "RPG Cròniques de Catalunya", monedes: "Monedas", tab_mapa: "Mundo", tab_missio: "Misión", tab_gremi: "Gremio", tab_lectura: "Lectura", tab_tips: "Tips", tab_botiga: "Tienda", biblioteca: "Biblioteca", biblioteca_desc: "Tots els personatges disponibles per les teves històries", biblioteca_cta: "💡 Compra packs de emoji en la tienda y desbloquea toda la biblioteca!", minijoc_titol: "Arma la frase", minijoc_desc: "Tria els emojis per formar la frase", comprovar: "Comprovar", correcte: "Correcte!", incorrecte: "No és així. Era:", no_prou_monedes: "No tens prou monedes!", comprat: "Comprat", tria_personatge: "Tria el teu personatge", nom_personatge: "Com et dius?", canviar_personatge: "Canviar Personatge", lectura_titol: "Lectura", lectura_btn: "Generar Lectura", tips_titol: "Tips", tips_btn: "Nou Tip"},
-  ca: {app_titol: "RPG Cròniques de Catalunya", monedes: "Monedes", tab_mapa: "Món", tab_missio: "Missió", tab_gremi: "Gremi", tab_lectura: "Lectura", tab_tips: "Tips", tab_botiga: "Botiga", biblioteca: "Biblioteca", biblioteca_desc: "Tots els personatges disponibles per les teves històries", biblioteca_cta: "💡 Compra packs d'emoji a la botiga i desbloqueja tota la biblioteca!", minijoc_titol: "Arma la frase", minijoc_desc: "Tria els emojis per formar la frase", comprovar: "Comprovar", correcte: "Correcte!", incorrecte: "No és així. Era:", no_prou_monedes: "No tens prou monedes!", comprat: "Comprat", tria_personatge: "Tria el teu personatge", nom_personatge: "Com et dius?", canviar_personatge: "Canviar Personatge", lectura_titol: "Lectura", lectura_btn: "Generar Lectura", tips_titol: "Tips", tips_btn: "Nou Tip"}
+  es: {app_titol: "Cat lingo emoji", monedes: "Monedas", tab_mapa: "Mundo", tab_missio: "Misión", tab_gremi: "Gremio", tab_lectura: "Lectura", tab_tips: "Tips", tab_botiga: "Tienda", biblioteca: "Biblioteca", biblioteca_desc: "Tots els personatges disponibles per les teves històries", biblioteca_cta: "💡 Compra packs de emoji en la tienda y desbloquea toda la biblioteca!", minijoc_titol: "Arma la frase", minijoc_desc: "Tria els emojis per formar la frase", comprovar: "Comprovar", correcte: "Correcte!", incorrecte: "No és així. Era:", no_prou_monedes: "No tens prou monedes!", comprat: "Comprat", tria_personatge: "Tria el teu personatge", nom_personatge: "Com et dius?", canviar_personatge: "Canviar Personatge", lectura_titol: "Lectura", lectura_btn: "Generar Lectura", tips_titol: "Tips", tips_btn: "Nou Tip"},
+  ca: {app_titol: "Cat lingo emoji", monedes: "Monedes", tab_mapa: "Món", tab_missio: "Missió", tab_gremi: "Gremi", tab_lectura: "Lectura", tab_tips: "Tips", tab_botiga: "Botiga", biblioteca: "Biblioteca", biblioteca_desc: "Tots els personatges disponibles per les teves històries", biblioteca_cta: "💡 Compra packs d'emoji a la botiga i desbloqueja tota la biblioteca!", minijoc_titol: "Arma la frase", minijoc_desc: "Tria els emojis per formar la frase", comprovar: "Comprovar", correcte: "Correcte!", incorrecte: "No és així. Era:", no_prou_monedes: "No tens prou monedes!", comprat: "Comprat", tria_personatge: "Tria el teu personatge", nom_personatge: "Com et dius?", canviar_personatge: "Canviar Personatge", lectura_titol: "Lectura", lectura_btn: "Generar Lectura", tips_titol: "Tips", tips_btn: "Nou Tip"}
 };
 
 let idioma = localStorage.getItem('cat_idioma') || 'ca';
@@ -76,13 +76,13 @@ function tancarModal() { document.getElementById('modal').classList.add('hidden'
 
 async function carregarDades() {
   try {
-    const res = await fetch('./data/biblioteca_emojis.json');
+    const res = await fetch('data/biblioteca_emojis.json');
     BIBLIOTECA_EMOJIS_BASE = await res.json();
   } catch(err) { BIBLIOTECA_EMOJIS_BASE = []; }
 
   let packsComprats = [];
   try {
-    const resBotiga = await fetch('./data/botiga_emojis.json');
+    const resBotiga = await fetch('data/botiga_emojis.json');
     const dataBotiga = await resBotiga.json();
     packsComprats = dataBotiga.filter(p => estat.compres.includes(p.id));
   } catch(err) { packsComprats = []; }
@@ -99,7 +99,7 @@ async function carregarDades() {
   });
 
   try {
-    const res = await fetch('./data/minijoc_frases.json');
+    const res = await fetch('data/minijoc_frases.json');
     const data = await res.json();
     FRASES_MINIJOC = data.frases;
   } catch(err) { FRASES_MINIJOC = []; }
@@ -109,11 +109,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   aplicarIdioma();
   await carregarDades();
   actualitzarUI();
-  canviarTab('missio', null);
+  canviarTab('missionPanel', null);
 });
 
 function aplicarIdioma() {
-  document.getElementById('app-titol').textContent = LANG.app_titol;
+  document.getElementById('title').textContent = LANG.app_titol;
   document.getElementById('text-monedes').textContent = LANG.monedes;
   document.getElementById('tab-mapa-txt').textContent = LANG.tab_mapa;
   document.getElementById('tab-missio-txt').textContent = LANG.tab_missio;
@@ -126,15 +126,15 @@ function aplicarIdioma() {
 function canviarTab(tab, e) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById(tab).classList.add('active');
   if(e && e.target) e.target.closest('.nav-item').classList.add('active');
 
-  if(tab === 'mapa') {carregarMapa();}
-  if(tab === 'missio') {carregarMissioTab();}
-  if(tab === 'gremi') {mostrarGremi('biblioteca', e);}
-  if(tab === 'lectura') {mostrarLecturaTab();}
-  if(tab === 'tips') {mostrarTipsTab();}
-  if(tab === 'botiga') {carregarBotiga();}
+  if(tab === 'menuPrincipal') {carregarMapa();}
+  if(tab === 'missionPanel') {carregarMissioTab();}
+  if(tab === 'gremioPanel') {mostrarGremi('biblioteca', e);}
+  if(tab === 'lecturaPanel') {mostrarLecturaTab();}
+  if(tab === 'tipsPanel') {mostrarTipsTab();}
+  if(tab === 'botigaPanel') {carregarBotiga();}
 }
 
 function carregarMapa() {
@@ -161,7 +161,7 @@ function actualitzarUI() {
 function mostrarGremi(tab, e) {
   document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
   if(e) e.target.classList.add('active');
-  const cont = document.getElementById('gremi-contenidor');
+  const cont = document.getElementById('gremioContent');
   cont.innerHTML = '';
 
   if(tab === 'personatges') {
@@ -189,9 +189,9 @@ function mostrarGremi(tab, e) {
 }
 
 function mostrarBibliotecaTab(tab, e) {
-  document.querySelectorAll('#biblioteca-subtabs.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('#gremioPanel.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
   if(e) e.target.classList.add('active');
-  const cont = document.getElementById('gremi-contenidor');
+  const cont = document.getElementById('gremioContent');
 
   if(tab === 'diccionari') {
     const desbloquejats = new Set(estat.emojisDesbloquejats || []);
@@ -242,7 +242,7 @@ function mostrarBibliotecaTab(tab, e) {
 
 // PESTANYA LECTURA
 function mostrarLecturaTab() {
-  const cont = document.getElementById('lectura-contenidor');
+  const cont = document.getElementById('lecturaContent');
   cont.innerHTML = `
     <h3 style="text-align:center; margin-bottom:15px;">${LANG.lectura_titol}</h3>
     <div id="lectura-content" style="background:#1a1a1a; padding:20px; border-radius:12px; min-height:150px; font-size:16px; line-height:1.6; margin-bottom:15px;">
@@ -258,7 +258,7 @@ function generarLectura() {
 
 // PESTANYA TIPS
 function mostrarTipsTab() {
-  const cont = document.getElementById('tips-contenidor');
+  const cont = document.getElementById('tipsContent');
   cont.innerHTML = `
     <h3 style="text-align:center; margin-bottom:15px;">${LANG.tips_titol}</h3>
     <div id="tips-content" style="background:#1a1a1a; padding:20px; border-radius:12px; min-height:100px; font-size:16px; line-height:1.6; margin-bottom:15px;">
@@ -291,6 +291,7 @@ function novaFraseMinijoc() {
   document.getElementById('minijoc-nivell').textContent = `Nivell ${NIVELL_MINIJOC.nivelActual} - ${solucio.length} emojis`;
   generarEmojisParaFraseCorta({solucio});
 }
+
 function generarEmojisParaFraseCorta(frase) {
   const emojisJugador = EMOJIS_JUGABLES.map(e => e.emoji);
   const emojisFalsos = emojisJugador
@@ -308,6 +309,7 @@ function generarEmojisParaFraseCorta(frase) {
   });
   document.getElementById('minijoc-emojis').innerHTML = html;
 }
+
 function obtenirArticle(emoji) {
   const emojiData = EMOJIS_JUGABLES.find(e => quitarSkinTone(e.emoji) === quitarSkinTone(emoji));
   if (!emojiData ||!emojiData.genere) return emojiData?.nom_cat || emoji;
@@ -315,6 +317,7 @@ function obtenirArticle(emoji) {
   const article = emojiData.genere === 'f'? 'La' : 'El';
   return `${article} ${nom}`;
 }
+
 function generarFraseDinamica(plantilla, emojisJugador) {
   let text = plantilla.text;
   let solucio = [];
@@ -331,6 +334,7 @@ function generarFraseDinamica(plantilla, emojisJugador) {
   }
   return { text, solucio };
 }
+
 function triarEmojiMinijoc(index) {
   vibrar();
   const emoji = estat.minijoc.emojisDisponibles[index];
@@ -340,10 +344,12 @@ function triarEmojiMinijoc(index) {
     actualitzarTriatsMinijoc();
   }
 }
+
 function actualitzarTriatsMinijoc() {
   const div = document.getElementById('minijoc-triats');
   div.textContent = estat.minijoc.emojisTriats.join(' ');
 }
+
 function comprovarMinijoc() {
   vibrar();
   const frase = estat.minijoc.fraseObjectiu;
@@ -369,6 +375,7 @@ function seleccionarPersonatge(id) {
   guardarEstat();
   mostrarGremi('personatges', null);
 }
+
 function canviarPersonatge() {
   estat.personatge = null;
   guardarEstat();
@@ -377,9 +384,9 @@ function canviarPersonatge() {
 
 // BOTIGA
 async function carregarBotiga() {
-  const cont = document.getElementById('botiga-contenidor');
+  const cont = document.getElementById('botigaContent');
   try {
-    const res = await fetch('./data/botiga_emojis.json');
+    const res = await fetch('data/botiga_emojis.json');
     const data = await res.json();
     estat.packs_botiga = data;
     renderitzarBotiga();
@@ -388,8 +395,9 @@ async function carregarBotiga() {
     cont.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#f44336;">Error: ${e.message}</div>`;
   }
 }
+
 function renderitzarBotiga() {
-  const cont = document.getElementById('botiga-contenidor');
+  const cont = document.getElementById('botigaContent');
   if (!cont ||!estat.packs_botiga) return;
   cont.innerHTML = '';
   estat.packs_botiga.forEach(pack => {
@@ -410,6 +418,7 @@ function renderitzarBotiga() {
     cont.appendChild(card);
   });
 }
+
 async function comprarPack(id, preu, event) {
   if (event) event.stopPropagation();
   if (estat.monedes < preu) {
@@ -437,7 +446,6 @@ async function comprarPack(id, preu, event) {
 
 // ============ GENERADORS INTEGRATS ============
 
-// LECTURA CONTENT
 const LECTURA_CONTENT = {
  1: {
     subjectes: ["El gat", "La noia", "El nen", "La casa", "El gos", "La mare", "El pare", "La nena", "El llibre", "La taula", "El sol", "La lluna", "La música", "El teatre", "La flor", "El cotxe", "La platja", "El parc", "L’escola", "El carrer"],
@@ -485,7 +493,6 @@ function generarTextLectura(nivell, lang) {
   return parts.join(" ");
 }
 
-// TIPS CONTENT
 const TIPS_CONTENT = {
   ca: [
     "En català, l'article definit 'el' es contrau amb 'a' i forma 'al'. Ex: Vaig al parc.",
@@ -493,7 +500,7 @@ const TIPS_CONTENT = {
     "Els pronoms febles van davant del verb: 'me'l dono'.",
     "El plural femení acaba en -es: la casa, les cases.",
     "Per dir l'hora: 'És la una' però 'Són les dues'.",
-    "Els dies de la setmana no porten majúscula en català.",
+        "Els dies de la setmana no porten majúscula en català.",
     "El diminutiu -et/-eta: gos > gosset, casa > caseta.",
     "La preposició 'de' + article: de + el = del. Ex: el llibre del nen.",
     "Els colors concorden en gènere i nombre: camisa blanca, camises blanques.",
@@ -524,183 +531,11 @@ const TIPS_CONTENT = {
 };
 
 function generarTipGramatica(lang) {
-  const tips = TIPS_CONTENT || TIPS_CONTENT['ca'];
+  const tips = TIPS_CONTENT[lang] || TIPS_CONTENT['ca'];
   return tips[Math.floor(Math.random() * tips.length)];
 }
 
-// MINIJOC
-function novaFraseMinijoc() {
-  if (!FRASES_MINIJOC || FRASES_MINIJOC.length === 0) return;
-  const emojisDisponibles = EMOJIS_JUGABLES;
-  if (emojisDisponibles.length < 2) {
-    document.getElementById('minijoc-frase').textContent = "Error: no hi ha emojis per jugar.";
-    document.getElementById('minijoc-emojis').innerHTML = '';
-    return;
-  }
-  const plantilla = FRASES_MINIJOC[Math.floor(Math.random() * FRASES_MINIJOC.length)];
-  const { text, solucio } = generarFraseDinamica(plantilla, emojisDisponibles.map(e => e.emoji));
-  estat.minijoc.fraseObjectiu = { text, solucio };
-  estat.minijoc.emojisTriats = [];
-  document.getElementById('minijoc-frase').textContent = text;
-  document.getElementById('minijoc-triats').textContent = '';
-  document.getElementById('minijoc-feedback').innerHTML = '';
-  document.getElementById('minijoc-nivell').textContent = `Nivell ${NIVELL_MINIJOC.nivelActual} - ${solucio.length} emojis`;
-  generarEmojisParaFraseCorta({solucio});
-}
-
-function generarEmojisParaFraseCorta(frase) {
-  const emojisJugador = EMOJIS_JUGABLES.map(e => e.emoji);
-  const emojisFalsos = emojisJugador
-.filter(e =>!frase.solucio.some(eSol => quitarSkinTone(e) === quitarSkinTone(eSol)))
-.sort(() => 0.5 - Math.random())
-.slice(0, 10 - frase.solucio.length);
-  const emojisAMostrar = [...frase.solucio,...emojisFalsos].sort(() => 0.5 - Math.random());
-  estat.minijoc.emojisDisponibles = emojisAMostrar;
-  let html = '';
-  emojisAMostrar.forEach((emoji, i) => {
-    const emojiData = EMOJIS_JUGABLES.find(e => quitarSkinTone(e.emoji) === quitarSkinTone(emoji));
-    html += `<div class="emoji-item" onclick="triarEmojiMinijoc(${i})" style="cursor:pointer;">
-      <div class="emoji-large">${emoji}</div>
-      <div class="emoji-name">${emojiData?.nom_cat || ''}</div>
-    </div>`;
-  });
-  document.getElementById('minijoc-emojis').innerHTML = html;
-}
-
-function obtenirArticle(emoji) {
-  const emojiData = EMOJIS_JUGABLES.find(e => quitarSkinTone(e.emoji) === quitarSkinTone(emoji));
-  if (!emojiData ||!emojiData.genere) return emojiData?.nom_cat || emoji;
-  const nom = emojiData.nom_cat;
-  const article = emojiData.genere === 'f'? 'La' : 'El';
-  return `${article} ${nom}`;
-}
-
-function generarFraseDinamica(plantilla, emojisJugador) {
-  let text = plantilla.text;
-  let solucio = [];
-  for (const cat of plantilla.categories) {
-    const emojisDisponibles = CATEGORIES_EMOJI[cat].filter(eBase =>
-      emojisJugador.some(eJug => quitarSkinTone(eJug) === quitarSkinTone(eBase))
-    );
-    if (!emojisDisponibles || emojisDisponibles.length === 0) {
-      return generarFraseDinamica(FRASES_MINIJOC[Math.floor(Math.random() * FRASES_MINIJOC.length)], emojisJugador);
-    }
-    const emojiElegit = emojisDisponibles[Math.floor(Math.random() * emojisDisponibles.length)];
-    text = text.replace(`{${cat}}`, obtenirArticle(emojiElegit));
-    solucio.push(emojiElegit);
-  }
-  return { text, solucio };
-}
-
-function triarEmojiMinijoc(index) {
-  vibrar();
-  const emoji = estat.minijoc.emojisDisponibles[index];
-  const maxEmojis = estat.minijoc.fraseObjectiu.solucio.length;
-  if (estat.minijoc.emojisTriats.length < maxEmojis) {
-    estat.minijoc.emojisTriats.push(emoji);
-    actualitzarTriatsMinijoc();
-  }
-}
-
-function actualitzarTriatsMinijoc() {
-  const div = document.getElementById('minijoc-triats');
-  div.textContent = estat.minijoc.emojisTriats.join(' ');
-}
-
-function comprovarMinijoc() {
-  vibrar();
-  const frase = estat.minijoc.fraseObjectiu;
-  const solucioCorrecta = frase.solucio.map(quitarSkinTone).join('');
-  const triatsCorrecte = estat.minijoc.emojisTriats.map(quitarSkinTone).join('');
-  const esCorrecte = solucioCorrecta === triatsCorrecte;
-  const feedback = document.getElementById('minijoc-feedback');
-  if (esCorrecte) {
-    feedback.innerHTML = `<p style="color:#4CAF50; font-weight:bold;">${LANG.correcte}</p>`;
-    estat.monedes += 5;
-    actualitzarUI();
-    guardarEstat();
-  } else {
-    feedback.innerHTML = `<p style="color:#f44336; font-weight:bold;">${LANG.incorrecte} ${frase.solucio.join(' ')}</p>`;
-  }
-  setTimeout(() => novaFraseMinijoc(), 2000);
-}
-
-function seleccionarPersonatge(id) {
-  const p = PERSONATGES_JUGADOR.find(x => x.id === id);
-  const nomInput = document.getElementById('nom-jugador')?.value.trim();
-  estat.personatge = { id: p.id, emoji: p.emoji, nom: nomInput || 'Jugador', nom_cat: p.nom };
-  guardarEstat();
-  mostrarGremi('personatges', null);
-}
-
-function canviarPersonatge() {
-  estat.personatge = null;
-  guardarEstat();
-  mostrarGremi('personatges', null);
-}
-
-// BOTIGA
-async function carregarBotiga() {
-  const cont = document.getElementById('botiga-contenidor');
-  try {
-    const res = await fetch('./data/botiga_emojis.json');
-    const data = await res.json();
-    estat.packs_botiga = data;
-    renderitzarBotiga();
-  } catch(e) {
-    console.error(e);
-    cont.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#f44336;">Error: ${e.message}</div>`;
-  }
-}
-
-function renderitzarBotiga() {
-  const cont = document.getElementById('botiga-contenidor');
-  if (!cont ||!estat.packs_botiga) return;
-  cont.innerHTML = '';
-  estat.packs_botiga.forEach(pack => {
-    const comprat = estat.compres.includes(pack.id);
-    const card = document.createElement('div');
-    card.className = 'capitol-card';
-    card.innerHTML = `
-      <div class="capitol-icona">🎁</div>
-      <h3>${pack.nom}</h3>
-      <p style="color:var(--text-sec); margin:8px 0;">${pack.descripcio}</p>
-      <p style="font-size:24px;">${pack.emojis.map(e => e.emoji).join(' ')}</p>
-      <button class="btn ${comprat? 'btn-sec' : ''}"
-              onclick="comprarPack('${pack.id}', ${pack.preu}, event)"
-              ${comprat? 'disabled' : ''}>
-        ${comprat? LANG.comprat : `🪙 ${pack.preu}`}
-      </button>
-    `;
-    cont.appendChild(card);
-  });
-}
-
-async function comprarPack(id, preu, event) {
-  if (event) event.stopPropagation();
-  if (estat.monedes < preu) {
-    mostrarModal(LANG.no_prou_monedes);
-    return;
-  }
-  vibrar();
-  estat.monedes -= preu;
-  estat.compres.push(id);
-  const pack = estat.packs_botiga.find(p => p.id === id);
-  if (pack) {
-    pack.emojis.forEach(e => {
-      if (!estat.emojisDesbloquejats.includes(e.emoji)) {
-        estat.emojisDesbloquejats.push(e.emoji);
-      }
-    });
-    await carregarDades();
-  }
-  NIVELL_MINIJOC.nivelActual = Math.min(NIVELL_MINIJOC.nivelActual + 1, NIVELL_MINIJOC.maxEmojis);
-  guardarEstat();
-  actualitzarUI();
-  renderitzarBotiga();
-  mostrarModal("Pack desbloquejat!");
-}
-
+// REGISTRAR SERVICE WORKER
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
 }
