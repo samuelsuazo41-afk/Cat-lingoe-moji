@@ -1,4 +1,4 @@
-// main.js - Cat lingo emoji - Lògica del minijoc només a Gremi > Minijocs
+// main.js - Cat lingo emoji - Lògica del minijoc només a Gremi > Biblioteca > Minijocs
 
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -89,10 +89,10 @@ function vibrar() { if (navigator.vibrate) navigator.vibrate(20); }
 function quitarSkinTone(emoji) { return emoji.replace(/[\u{1F3FB}-\u{1F3FF}]/u, ''); }
 function mostrarModal(text) {
   document.getElementById('modalText').textContent = text;
-  document.getElementById('modal').classList.add('active');
+  document.getElementById('modal').classList.remove('hidden');
 }
 function tancarModal() {
-  document.getElementById('modal').classList.remove('active');
+  document.getElementById('modal').classList.add('hidden');
 }
 
 const esperarElemento = (id, callback, intentos = 20) => {
@@ -159,7 +159,7 @@ function canviarTab(tab, e) {
 
   if(tab === 'mapa') carregarMapa();
   if(tab === 'missio') carregarMissioTab();
-  if(tab === 'gremi') mostrarGremi('biblioteca', e);
+  if(tab === 'gremi') mostrarGremi('personatges', e);
   if(tab === 'lectura') mostrarLecturaTab();
   if(tab === 'tips') mostrarTipsTab();
   if(tab === 'botiga') carregarBotiga();
@@ -196,9 +196,9 @@ function actualitzarUI() {
   document.getElementById('monedes').innerHTML = `${estat.monedes} <span id="text-monedes">${LANG.monedes}</span>`;
 }
 
-// GREMI
+// GREMI - només 2 tabs: Personatges i Biblioteca
 function mostrarGremi(tab, e) {
-  document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#tab-gremi.sub-tab-btn').forEach(b => b.classList.remove('active'));
   if(e) e.target.classList.add('active');
 
   const cont = document.getElementById('gremi-contenidor');
@@ -225,15 +225,25 @@ function mostrarGremi(tab, e) {
       </div>`;
     }
   }
-  if(tab === 'biblioteca') mostrarBibliotecaTab('diccionari');
-  if(tab === 'minijocs') mostrarBibliotecaTab('minijocs');
+
+  if(tab === 'biblioteca') {
+    // Pinta els sub-tabs DINS de biblioteca
+    cont.innerHTML = `
+      <div class="sub-tabs" style="margin-bottom:20px;">
+        <button class="sub-tab-btn active" onclick="mostrarBibliotecaTab('diccionari', event)">Diccionari</button>
+        <button class="sub-tab-btn" onclick="mostrarBibliotecaTab('minijocs', event)">Minijocs</button>
+      </div>
+      <div id="biblioteca-content"></div>
+    `;
+    mostrarBibliotecaTab('diccionari', null);
+  }
 }
 
 function mostrarBibliotecaTab(tab, e) {
-  document.querySelectorAll('.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('#gremi-contenidor.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
   if(e) e.target.classList.add('active');
 
-  const cont = document.getElementById('gremi-contenidor');
+  const cont = document.getElementById('biblioteca-content');
   if(!cont) return;
 
   if(tab === 'diccionari') {
@@ -243,7 +253,7 @@ function mostrarBibliotecaTab(tab, e) {
     html += `<div style="background:linear-gradient(135deg, #FF6B35, #FF8C42); padding:12px; border-radius:12px; margin-bottom:20px; text-align:center; font-weight:700; font-size:14px;">${LANG.biblioteca_cta}</div>`;
     for (const [cat, emojis] of Object.entries(CATEGORIES_EMOJI)) {
       html += `<h4 style="margin:15px 0 8px; color:#4CAF50; text-transform:capitalize;">${cat}</h4>`;
-      html += `<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;">`;
+      html += `<div class="emoji-grid">`;
       emojis.forEach(emoji => {
         const info = EMOJIS_JUGABLES.find(e => e.emoji === emoji);
         const nom = info? info.nom_cat : emoji;
@@ -254,9 +264,9 @@ function mostrarBibliotecaTab(tab, e) {
         const pointer = comprat? 'pointer' : 'not-allowed';
         const colorTexto = comprat? '#fff' : '#444';
         const colorParaules = comprat? '#aaa' : '#222';
-        html += `<div style="text-align:center; padding:12px 8px; background:#1a1a1a; border-radius:10px; opacity:${opacidad}; filter:${filtro}; pointer-events:${pointer};">
-          <div style="font-size:42px; margin-bottom:6px;">${emoji}</div>
-          <div style="font-size:13px; font-weight:600; color:${colorTexto};">${nom}</div>
+        html += `<div class="emoji-item" style="opacity:${opacidad}; filter:${filtro}; pointer-events:${pointer};">
+          <div class="emoji-large">${emoji}</div>
+          <div class="emoji-name" style="color:${colorTexto};">${nom}</div>
           <div style="font-size:10px; color:${colorParaules}; margin-top:4px;">${paraules}</div>
         </div>`;
       });
@@ -264,17 +274,18 @@ function mostrarBibliotecaTab(tab, e) {
     }
     cont.innerHTML = html;
   }
+
   if(tab === 'minijocs') {
     cont.innerHTML = `
-      <h3>${LANG.minijoc_titol}</h3>
-      <p id="minijoc-nivell" style="color:#4CAF50; font-weight:bold; margin:8px 0;">Nivell ${NIVELL_MINIJOC.nivelActual}</p>
-      <p style="color:#888; margin:12px 0;">${LANG.minijoc_desc}</p>
+      <h3 style="text-align:center;">${LANG.minijoc_titol}</h3>
+      <p id="minijoc-nivell" style="color:#4CAF50; font-weight:bold; margin:8px 0; text-align:center;">Nivell ${NIVELL_MINIJOC.nivelActual}</p>
+      <p style="color:#888; margin:12px 0; text-align:center;">${LANG.minijoc_desc}</p>
       <div id="minijoc-frase" style="background:#222; padding:15px; border-radius:12px; min-height:50px; margin-bottom:15px; text-align:center; font-size:18px;">Prem "Nova frase" per començar</div>
-      <button class="btn btn-sec" onclick="novaFraseMinijoc()" style="margin-bottom:15px;">Nova frase</button>
-      <div id="minijoc-emojis" class="emoji-grid" style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:15px;"></div>
+      <button class="btn btn-sec" onclick="novaFraseMinijoc()" style="margin-bottom:15px; width:100%;">Nova frase</button>
+      <div id="minijoc-emojis" class="emoji-grid" style="grid-template-columns:repeat(5,1fr);"></div>
       <div id="minijoc-triats" style="background:#222; padding:15px; border-radius:12px; min-height:50px; margin:15px 0; text-align:center; font-size:24px;"></div>
-      <button class="btn" onclick="comprovarMinijoc()">${LANG.comprovar}</button>
-      <div id="minijoc-feedback" style="margin-top:15px;"></div>
+      <button class="btn" onclick="comprovarMinijoc()" style="width:100%;">${LANG.comprovar}</button>
+      <div id="minijoc-feedback" style="margin-top:15px; text-align:center;"></div>
     `;
     novaFraseMinijoc();
   }
@@ -330,7 +341,7 @@ function generarTip() {
   document.getElementById('tips-content').textContent = tip;
 }
 
-// MINIJOC - només a Gremi > Minijocs
+// MINIJOC - només a Gremi > Biblioteca > Minijocs
 function novaFraseMinijoc() {
   if (!FRASES_MINIJOC || FRASES_MINIJOC.length === 0) return;
   const emojisDisponibles = EMOJIS_JUGABLES;
@@ -362,9 +373,9 @@ function generarEmojisParaFraseCorta(frase) {
   let html = '';
   emojisAMostrar.forEach((emoji, i) => {
     const emojiData = EMOJIS_JUGABLES.find(e => quitarSkinTone(e.emoji) === quitarSkinTone(emoji));
-    html += `<div class="emoji-item" onclick="triarEmojiMinijoc(${i})" style="cursor:pointer; text-align:center; padding:10px; background:#333; border-radius:8px;">
-      <div style="font-size:36px;">${emoji}</div>
-      <div style="font-size:11px; color:#aaa;">${emojiData?.nom_cat || ''}</div>
+    html += `<div class="emoji-item" onclick="triarEmojiMinijoc(${i})">
+      <div class="emoji-large">${emoji}</div>
+      <div class="emoji-name">${emojiData?.nom_cat || ''}</div>
     </div>`;
   });
   esperarElemento('minijoc-emojis', el => el.innerHTML = html);
@@ -442,7 +453,7 @@ function canviarPersonatge() {
   mostrarGremi('personatges', null);
 }
 
-// BOTIGA - usa els mateixos EMOJIS_JUGABLES que Biblioteca
+// BOTIGA
 async function carregarBotiga() {
   const cont = document.getElementById('botiga-contenidor');
   if(!cont) return;
@@ -466,11 +477,10 @@ function renderitzarBotiga() {
     const comprat = estat.compres.includes(pack.id);
     const card = document.createElement('div');
     card.className = 'capitol-card';
-    card.style.cssText = 'background:#2a2a2a; padding:15px; border-radius:12px; text-align:center;';
     card.innerHTML = `
-      <div style="font-size:48px; margin-bottom:10px;">🎁</div>
-      <h3 style="margin:10px 0;">${pack.nom}</h3>
-      <p style="color:#aaa; margin:8px 0; font-size:14px;">${pack.descripcio}</p>
+      <div class="capitol-icona">🎁</div>
+      <h3>${pack.nom}</h3>
+      <p>${pack.descripcio}</p>
       <p style="font-size:24px; margin:10px 0;">${pack.emojis.map(e => e.emoji).join(' ')}</p>
       <button class="btn ${comprat? 'btn-sec' : ''}" onclick="comprarPack('${pack.id}', ${pack.preu}, event)" ${comprat? 'disabled' : ''}>
         ${comprat? LANG.comprat : `🪙 ${pack.preu}`}
@@ -539,7 +549,7 @@ function rand(arr) {
 }
 
 const TIPS_CONTENT = {
-  ca: [
+    ca: [
     "En català, l'article definit 'el' es contrau amb 'a' i forma 'al'. Ex: Vaig al parc.",
     "El passat perifràstic s'usa molt: 'vaig menjar' en comptes de 'menjí'.",
     "Els pronoms febles van davant del verb: 'me'l dono'.",
@@ -592,4 +602,3 @@ document.addEventListener('DOMContentLoaded', async () => {
   actualitzarUI();
   canviarTab('gremi', null);
 });
-  
