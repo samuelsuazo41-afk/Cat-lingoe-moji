@@ -1,4 +1,4 @@
-const CACHE_NAME = 'catlingo-v35';
+const CACHE_NAME = 'catlingo-v36';
 const URLS_TO_CACHE = [
   './',
   './index.html',
@@ -8,7 +8,8 @@ const URLS_TO_CACHE = [
   './data/botiga_emojis.json',
   './data/minijoc_frases.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './icon-maskable-512.png'
 ];
 
 // Instal·lació: cachejar tot
