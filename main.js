@@ -751,7 +751,7 @@ const dadesTips = {
     {truc: "Em dic = me llamo", exemple: "Em dic Joan"},
     {truc: "Quin/quina per preguntar qualitat", exemple: "Quin color t’agrada?"},
     {truc: "Quants/quantes per preguntar quantitat", exemple: "Quants anys tens?"},
-    {truc: "Aquest/aqueste/aquests/aquestes = este/esta/estos/estas", exemple: "Aquest llibre"},
+    {truc: "Aquest/aquesta/aquests/aquestes = este/esta/estos/estas", exemple: "Aquest llibre"},
     {truc: "Aquell/aquella/aquells/aquelles = aquel/aquella/aquellos/aquellas", exemple: "Aquell cotxe"}
   ],
   a2: [
@@ -807,28 +807,30 @@ const dadesTips = {
   ]
 };
 
-let tipsUsats = {a1: [], a2: [], b1: []};
+// Unim tots els tips en un sol array per mostrar-los aleatòriament
+const totsElsTips = [...dadesTips.a1,...dadesTips.a2,...dadesTips.b1];
+let tipsUsats = [];
 
 function carregarTips() {
-  let num = estat.progres.nivellActualMapa;
-  let nivell = mapaNivellALletra(num);
-  let llistatTips = dadesTips[nivell];
-
   const cont = document.getElementById('tips-contenidor');
-  if (!llistatTips || llistatTips.length === 0) {
-    cont.innerHTML = `<div style="text-align:center; opacity:0.6; padding:40px;">Encara no hi ha tips per aquest nivell</div>`;
+
+  if (totsElsTips.length === 0) {
+    cont.innerHTML = `<div style="text-align:center; opacity:0.6; padding:40px;">No hi ha tips carregats</div>`;
     return;
   }
 
-  if (tipsUsats[nivell].length >= llistatTips.length) {
-    tipsUsats[nivell] = [];
+  // Si ja hem mostrat tots, resetejem
+  if (tipsUsats.length >= totsElsTips.length) {
+    tipsUsats = [];
   }
 
-  let indexDisponibles = llistatTips.map((_, i) => i).filter(i =>!tipsUsats[nivell].includes(i));
-  let indexAleatori = indexDisponibles[Math.floor(Math.random()*indexDisponibles.length)];
-  tipsUsats[nivell].push(indexAleatori);
+  // Agafem un índex que no s'hagi usat
+  let indexDisponibles = totsElsTips.map((_, i) => i).filter(i =>!tipsUsats.includes(i));
+  let indexAleatori = indexDisponibles[Math.floor(Math.random() * indexDisponibles.length)];
+  tipsUsats.push(indexAleatori);
 
-  let tip = llistatTips[indexAleatori];
+  let tip = totsElsTips[indexAleatori];
+
   cont.innerHTML = `
     <div style="background:#1a1a1a; padding:20px; border-radius:12px; margin-bottom:15px;">
       <div style="font-size:18px; margin-bottom:10px;">💡 ${tip.truc}</div>
@@ -837,6 +839,7 @@ function carregarTips() {
     <button class="btn" onclick="carregarTips()" style="width:100%;">Següent Tip</button>
   `;
 }
+  
 
 // ===== BOTIGA =====
 async function carregarBotiga() {
