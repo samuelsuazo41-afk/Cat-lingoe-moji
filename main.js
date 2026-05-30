@@ -108,7 +108,11 @@ function aplicarIdioma() {
   document.getElementById('tab-tips-txt').textContent = LANG.tab_tips;
   document.getElementById('tab-botiga-txt').textContent = LANG.tab_botiga;
   document.getElementById('btn-lectura').textContent = LANG.lectura_btn;
+  function actualitzarUI() {
+  document.getElementById('monedes').textContent = estat.monedes;
   document.getElementById('energia-display').textContent = estat.energia;
+  actualitzarBarraProgres();
+  }
 }
 
 function canviarTab(tab, e) {
