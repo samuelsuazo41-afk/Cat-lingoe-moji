@@ -511,13 +511,13 @@ function cargarLectura() {
   let contextos = BANCO_VOCAB[nivell];
 
   if (!contextos) {
-    document.getElementById('lectura-content').innerHTML =
+    document.getElementById('lectura-contenidor').innerHTML =
       "Encara no hi ha lectures d’aquest nivell. Puja de nivell per desbloquejar-les!";
     return;
   }
 
   // Missatge inicial
-  document.getElementById('lectura-content').innerHTML = `
+  document.getElementById('lectura-contenidor').innerHTML = `
     <div style="text-align:center; padding:20px; opacity:0.8;">
       <div style="font-size:48px; margin-bottom:10px;">📖</div>
       <div style="font-size:16px; margin-bottom:15px;">
@@ -536,7 +536,7 @@ function generarLectura() {
   let contextos = BANCO_VOCAB[nivell];
 
   if (!contextos) {
-    document.getElementById('lectura-content').innerHTML = "Encara no hi ha lectures d’aquest nivell.";
+    document.getElementById('lectura-contenidor').innerHTML = "Encara no hi ha lectures d’aquest nivell.";
     return;
   }
 
@@ -564,7 +564,7 @@ function generarLectura() {
   let paraules = [];
 
   // Inici
-  paraules.push(historia.marcadors_temporals[0] + ","); // Primer
+  paraules.push(historia.marcadors_temporals[0] + ",");
   paraules.push(protagonista.toLowerCase());
   paraules.push("està");
   let lloc1 = historia.llocs[Math.floor(Math.random()*historia.llocs.length)];
@@ -599,7 +599,7 @@ function generarLectura() {
   // Desenllaç
   let lloc2 = historia.llocs[Math.floor(Math.random()*historia.llocs.length)];
   paraules.push(protagonista);
-  paraules.push(historia.marcadors_temporals[historia.marcadors_temporals.length-1].toLowerCase()); // Al final
+  paraules.push(historia.marcadors_temporals[historia.marcadors_temporals.length-1].toLowerCase());
   paraules.push("va");
   paraules.push(ambArticle(lloc2) + ",");
   paraules.push("resol");
@@ -645,8 +645,9 @@ function generarLectura() {
     </div>
   `;
 
-  document.getElementById('lectura-content').innerHTML = html;
-}
+  document.getElementById('lectura-contenidor').innerHTML = html;
+  }
+
 
 // ===== TIPS =====
 const dadesTips = {
