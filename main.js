@@ -662,17 +662,6 @@ function generarLectura() {
 
   let keys = Object.keys(contextos);
   let temaKey = keys[Math.floor(Math.random() * keys.length)];
-  console.log("Nivell:", nivell, "TemaKey:", temaKey, "Contextos:", contextos);
-
-  let h = contextos[temaKey];
-  if (!h) {
-    document.getElementById('lectura-contenidor').innerHTML = "Error: no trobo dades per " + temaKey;
-    return;
-  }
-
-
-  let keys = Object.keys(contextos);
-  let temaKey = keys[Math.floor(Math.random() * keys.length)];
   let h = contextos[temaKey];
   let protagonista = h.persones[Math.floor(Math.random() * h.persones.length)];
   let pronom = protagonista.startsWith("La")? "ella" : "ell";
@@ -689,7 +678,7 @@ function generarLectura() {
 
   let text = `${protagonista} ${verb1} ${obj1} pel ${lloc}. `;
   text += `Eren ${get(h.temps)} i tot tenia un toc de ${get(h.atmosfera)}. `;
-  text += `${get(h.connectors)}, ${pronom} va sentir ${get(h.detalls)}. `;
+  text += `${get(h.conectores)}, ${pronom} va sentir ${get(h.detalls)}. `; // <- aquí el fix
   text += `${get(h.causa_efecte)}, ${pronom} va haver de ${verb2} ${obj2}. `;
   text += `Així que ${pronom} ${verb3} ${obj3}. `;
   text += get(h.tancaments) + ".";
