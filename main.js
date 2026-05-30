@@ -548,10 +548,118 @@ const BANCO_VOCAB = {
   }
 };
 
+// ===== SISTEMA D'ENERGIA =====
+
+// Estat global - afegeix aquestes 2 línies si no les tens
+let estat = {
+  monedes: parseInt(localStorage.getItem('cat_monedes')) || 0,
+  compres: JSON.parse(localStorage.getItem('cat_compres')) || [],
+  emojisDesbloquejats: JSON.parse(localStorage.getItem('cat_emojis')) || ['😀','😊','😂','👨','👩','🐶','🏠','🍎','🚗','⚽'],
+  progres: JSON.parse(localStorage.getItem('cat_progres')) || {respostesCorrectes: 0, nivellActualMapa: 1},
+  energia: parseInt(localStorage.getItem('cat_energia')) || 100,
+  ultimaRecargaEnergia: parseInt(localStorage.getItem('cat_ultima_energia')) || Date.now(),
+  minijoc: {fraseObjectiu: null, emojisTriats: [], emojisDisponibles: []},
+  packs_botiga: []
+};
+
+// Regenera 1 punt cada 5 minuts
+function recargarEnergia() {
+  const MAX_ENERGIA = 100;
+  const MINUTOS_POR_PUNTO = 5;
+
+  let ara = Date.now();
+  let diffMinuts = Math.floor((ara - estat.ultimaRecargaEnergia) / 60000);
+  let puntsARecuperar = Math.floor(diffMinuts / MINUTOS_POR_PUNTO);
+
+  if (puntsARecuperar > 0) {
+    estat.energia = Math.min(MAX_ENERGIA, estat.energia + puntsARecuperar);
+    estat.ultimaRecargaEnergia += puntsARecuperar * MINUTOS_POR_PUNTO * 60000;
+    guardarEstat();
+  }
+}
+
+// Recarregar a 100 per 50 monedes
+function recargarConMonedes() {
+  const COSTE = 50;
+  const MAX_ENERGIA = 100;
+
+  if (estat.monedes < COSTE) {
+    mostrarModal(LANG.no_prou_monedes);
+    return;
+  }
+  if (estat.energia >= MAX_ENERGIA) {
+    mostrarModal("Ja tens l’energia al màxim");
+    return;
+  }
+
+  vibrar();
+  estat.monedes -= COSTE;
+  estat.energia = MAX_ENERGIA;
+  estat.ultimaRecargaEnergia = Date.now();
+
+  guardarEstat();
+  actualitzarUI();
+  cargarLectura();
+  mostrarModal("Energia recarregada a 100!");
+}
+
+// Actualitza guardarEstat per incloure energia
+function guardarEstat() {
+  localStorage.setItem('cat_monedes', estat.monedes);
+  localStorage.setItem('cat_compres', JSON.stringify(estat.compres));
+  localStorage.setItem('cat_emojis', JSON.stringify(estat.emojisDesbloquejats));
+  localStorage.setItem('cat_progres', JSON.stringify(estat.progres));
+  localStorage.setItem('cat_energia', estat.energia);
+  localStorage.setItem('cat_ultima_energia', estat.ultimaRecargaEnergia);
+}
+
+// ===== LECTURA =====
+
+function cargarLectura() {
+  recargarEnergia();
+
+  let num = estat.progres.nivellActualMapa;
+  let nivell = mapaNivellALletra(num);
+  let contextos = BANCO_VOCAB[nivell];
+
+  if (!contextos) {
+    document.getElementById('lectura-contenidor').innerHTML = "Encara no hi ha lectures d’aquest nivell.";
+    return;
+  }
+
+  let primerTema = Object.keys(contextos)[0].replace(/_/g,' ').replace(/^la |^el /,'');
+  let minutsPerSeguent = 5 - Math.floor((Date.now() - estat.ultimaRecargaEnergia) / 60000) % 5;
+  if (estat.energia >= 100) minutsPerSeguent = 0;
+
+  document.getElementById('lectura-contenidor').innerHTML = `
+    <div style="text-align:center; padding:20px; opacity:0.8;">
+      <div style="font-size:48px; margin-bottom:10px;">📖</div>
+      <div style="font-size:16px; margin-bottom:10px;">
+        Nivell ${nivell.toUpperCase()} - ${primerTema}
+      </div>
+      <div style="font-size:14px; opacity:0.7; margin-bottom:10px;">
+        Energia: ${estat.energia}/100
+      </div>
+      ${estat.energia < 100?
+        `<div style="font-size:12px; opacity:0.6; margin-bottom:10px;">Següent punt en ${minutsPerSeguent} min</div>` :
+        ''}
+      <div style="font-size:14px; opacity:0.7; margin:10px 0;">
+        Generar Lectura costa 10 energia
+      </div>
+      ${estat.energia < 100 && estat.monedes >= 50?
+        `<button class="btn btn-sec" onclick="recargarConMonedes()" style="width:100%; margin-top:10px;">
+          ⚡ Recarregar a 100 per 50 🪙
+        </button>` : ''}
+    </div>
+  `;
+}
+
 function generarLectura() {
   if (estat.energia < 10) return mostrarModal(LANG.energy_low);
   estat.energia -= 10;
-  actualitzarStats();
+  estat.ultimaRecargaEnergia = Date.now();
+  guardarEstat();
+  actualitzarUI();
 
   let num = estat.progres.nivellActualMapa;
   let nivell = mapaNivellALletra(num);
